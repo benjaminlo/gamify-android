@@ -1,116 +1,103 @@
 package com.tribalscale.gamify;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
+import android.support.v7.app.AppCompatActivity;
+import android.widget.TextView;
 
-import com.github.nkzawa.emitter.Emitter;
-import com.github.nkzawa.socketio.client.IO;
-import com.github.nkzawa.socketio.client.Socket;
+import com.github.nkzawa.emitter.Emitter.Listener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.URISyntaxException;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
+import static com.tribalscale.gamify.SocketManager.EVENT_BUTTON_CLICKED;
+import static com.tribalscale.gamify.SocketManager.EVENT_CLEAR;
+import static com.tribalscale.gamify.SocketManager.EVENT_CREATE_ROOM;
+import static com.tribalscale.gamify.SocketManager.EVENT_ROOM_CREATED;
+import static com.tribalscale.gamify.SocketManager.EVENT_ROOM_ID;
+import static com.tribalscale.gamify.SocketManager.EVENT_USERNAME;
+import static com.tribalscale.gamify.SocketManager.KEY_IS_CORRECT;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String GAME_NAME_MUSIC = "Music Game";
     private static final String TAG = "GamifyMain";
+    @BindView(R.id.room_id)
+    TextView roomId;
 
-    private Button buttonSendMessage;
-    private Button buttonAddUser;
+    @BindView(R.id.player_response)
+    TextView playerResponse;
 
-    private Socket mSocket;
+    private SocketManager socketManager;
 
-    {
-        try {
-            mSocket = IO.socket("http://10.0.1.229:3000");
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-    }
+    private Listener onRoomCreated = args -> {
+        final JSONObject data = (JSONObject) args[0];
+        runOnUiThread(() -> {
+            try {
+                roomId.setText(data.getString(EVENT_ROOM_ID));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        });
+    };
+
+    private Listener onButtonClicked = args -> {
+        final JSONObject data = (JSONObject) args[0];
+        runOnUiThread(() -> {
+            try {
+                playerResponse.setText(data.getString(EVENT_USERNAME));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        });
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        buttonSendMessage = (Button) findViewById(R.id.button_send_message);
-        if (buttonSendMessage != null) {
-            buttonSendMessage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Log.d(TAG, "onClick send message!");
-                    mSocket.emit("new message", "hello world");
-                }
-            });
+
+        ButterKnife.bind(this);
+
+        socketManager = SocketManager.getInstance();
+
+        socketManager.addListener(EVENT_ROOM_CREATED, onRoomCreated);
+        socketManager.addListener(EVENT_BUTTON_CLICKED, onButtonClicked);
+    }
+
+    @OnClick(R.id.button_create_room)
+    void emitCreateRoom() {
+        socketManager.emit(EVENT_CREATE_ROOM, GAME_NAME_MUSIC);
+    }
+
+    @OnClick(R.id.button_right)
+    void emitRight() {
+        JSONObject data = new JSONObject();
+        try {
+            data.put(KEY_IS_CORRECT, true);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
+        socketManager.emit(EVENT_CLEAR, data);
+    }
 
-
-        buttonAddUser = (Button) findViewById(R.id.button_add_user);
-        if (buttonAddUser != null) {
-            buttonAddUser.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Log.d(TAG, "onClick add user!");
-                    mSocket.emit("add user", "test user");
-                }
-            });
+    @OnClick(R.id.button_wrong)
+    void emitWrong() {
+        JSONObject data = new JSONObject();
+        try {
+            data.put(KEY_IS_CORRECT, false);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-
-        mSocket.on("new message", onNewMessage);
-        mSocket.on("login", onUserJoined);
-        mSocket.connect();
+        socketManager.emit(EVENT_CLEAR, data);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-        mSocket.disconnect();
-        mSocket.off("new message", onNewMessage);
-        mSocket.off("login", onUserJoined);
+        socketManager.destroy();
     }
-
-    private Emitter.Listener onNewMessage = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-            Log.d(TAG, "new message received");
-            final JSONObject data = (JSONObject) args[0];
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        String username = data.getString("username");
-                        String message = data.getString("message");
-                        Toast.makeText(MainActivity.this, username + " " + message, Toast.LENGTH_LONG).show();
-                    } catch (JSONException e) {
-                        Toast.makeText(MainActivity.this, "JSON Error", Toast.LENGTH_LONG).show();
-                        e.printStackTrace();
-                    }
-                }
-            });
-        }
-    };
-
-    private Emitter.Listener onUserJoined = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-            Log.d(TAG, "login");
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (buttonSendMessage != null) {
-                        buttonSendMessage.setVisibility(View.VISIBLE);
-                    }
-
-                    if (buttonAddUser != null) {
-                        buttonAddUser.setVisibility(View.GONE);
-                    }
-                }
-            });
-        }
-    };
 }

@@ -1,10 +1,19 @@
 package com.tribalhacks.gamify;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.github.nkzawa.emitter.Emitter.Listener;
+import com.spotify.sdk.android.authentication.AuthenticationClient;
+import com.spotify.sdk.android.authentication.AuthenticationResponse;
+import com.spotify.sdk.android.player.Config;
+import com.spotify.sdk.android.player.Player;
+import com.spotify.sdk.android.player.Spotify;
+import com.tribalhacks.gamify.spotify.SpotifyKeys;
+import com.tribalhacks.gamify.spotify.SpotifyManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String GAME_NAME_MUSIC = "Music Game";
     private static final String TAG = "GamifyMain";
+
     @BindView(R.id.room_id)
     TextView roomId;
 
@@ -32,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     TextView playerResponse;
 
     private SocketManager socketManager;
+    private SpotifyManager spotifyManager;
 
     private Listener onRoomCreated = args -> {
         final JSONObject data = (JSONObject) args[0];
@@ -56,6 +67,31 @@ public class MainActivity extends AppCompatActivity {
     };
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == SpotifyManager.REQUEST_CODE) {
+            AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, data);
+            if (response.getType() == AuthenticationResponse.Type.TOKEN) {
+                Config playerConfig = new Config(this, response.getAccessToken(), SpotifyKeys.CLIENT_ID);
+                Spotify.getPlayer(playerConfig, this, new Player.InitializationObserver() {
+                    @Override
+                    public void onInitialized(Player player) {
+                        player.addConnectionStateCallback(spotifyManager);
+                        player.addPlayerNotificationCallback(spotifyManager);
+                        spotifyManager.setPlayer(player);
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        Log.e(TAG, "Could not initialize player: " + throwable.getMessage());
+                    }
+                });
+            }
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -66,6 +102,9 @@ public class MainActivity extends AppCompatActivity {
 
         socketManager.addListener(EVENT_ROOM_CREATED, onRoomCreated);
         socketManager.addListener(EVENT_BUTTON_CLICKED, onButtonClicked);
+
+        spotifyManager = SpotifyManager.getInstance();
+        spotifyManager.authenticate(this);
     }
 
     @OnClick(R.id.button_create_room)
@@ -97,7 +136,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         socketManager.destroy();
+        Spotify.destroyPlayer(spotifyManager);
+        super.onDestroy();
     }
 }

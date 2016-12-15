@@ -3,16 +3,10 @@ package com.tribalhacks.gamify;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.github.nkzawa.emitter.Emitter.Listener;
-import com.spotify.sdk.android.authentication.AuthenticationClient;
-import com.spotify.sdk.android.authentication.AuthenticationResponse;
-import com.spotify.sdk.android.player.Config;
-import com.spotify.sdk.android.player.Player;
-import com.spotify.sdk.android.player.Spotify;
-import com.tribalhacks.gamify.spotify.SpotifyKeys;
 import com.tribalhacks.gamify.spotify.SpotifyManager;
 
 import org.json.JSONException;
@@ -28,7 +22,10 @@ import static com.tribalhacks.gamify.SocketManager.EVENT_CREATE_ROOM;
 import static com.tribalhacks.gamify.SocketManager.EVENT_ROOM_CREATED;
 import static com.tribalhacks.gamify.SocketManager.EVENT_ROOM_ID;
 import static com.tribalhacks.gamify.SocketManager.EVENT_USERNAME;
+import static com.tribalhacks.gamify.SocketManager.EVENT_USER_JOINED;
 import static com.tribalhacks.gamify.SocketManager.KEY_IS_CORRECT;
+import static com.tribalhacks.gamify.SocketManager.KEY_USER;
+import static com.tribalhacks.gamify.SocketManager.KEY_USERNAME;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,8 +38,13 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.player_response)
     TextView playerResponse;
 
+    @BindView(R.id.button_play_pause)
+    Button buttonPlayPause;
+
     private SocketManager socketManager;
     private SpotifyManager spotifyManager;
+
+    private String username;
 
     private Listener onRoomCreated = args -> {
         final JSONObject data = (JSONObject) args[0];
@@ -55,11 +57,23 @@ public class MainActivity extends AppCompatActivity {
         });
     };
 
-    private Listener onButtonClicked = args -> {
+    private Listener onPlayerResponded = args -> {
         final JSONObject data = (JSONObject) args[0];
         runOnUiThread(() -> {
             try {
-                playerResponse.setText(data.getString(EVENT_USERNAME));
+                username = data.getString(EVENT_USERNAME);
+                playerResponse.setText(username);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        });
+    };
+
+    private Listener onUserJoined = args -> {
+        final JSONObject data = (JSONObject) args[0];
+        runOnUiThread(() -> {
+            try {
+                JSONObject user = data.getJSONObject(KEY_USER);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -70,25 +84,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == SpotifyManager.REQUEST_CODE) {
-            AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, data);
-            if (response.getType() == AuthenticationResponse.Type.TOKEN) {
-                Config playerConfig = new Config(this, response.getAccessToken(), SpotifyKeys.CLIENT_ID);
-                Spotify.getPlayer(playerConfig, this, new Player.InitializationObserver() {
-                    @Override
-                    public void onInitialized(Player player) {
-                        player.addConnectionStateCallback(spotifyManager);
-                        player.addPlayerNotificationCallback(spotifyManager);
-                        spotifyManager.setPlayer(player);
-                    }
-
-                    @Override
-                    public void onError(Throwable throwable) {
-                        Log.e(TAG, "Could not initialize player: " + throwable.getMessage());
-                    }
-                });
-            }
-        }
+        spotifyManager.createPlayer(this, requestCode, resultCode, data);
     }
 
     @Override
@@ -101,7 +97,8 @@ public class MainActivity extends AppCompatActivity {
         socketManager = SocketManager.getInstance();
 
         socketManager.addListener(EVENT_ROOM_CREATED, onRoomCreated);
-        socketManager.addListener(EVENT_BUTTON_CLICKED, onButtonClicked);
+        socketManager.addListener(EVENT_USER_JOINED, onUserJoined);
+        socketManager.addListener(EVENT_BUTTON_CLICKED, onPlayerResponded);
 
         spotifyManager = SpotifyManager.getInstance();
         spotifyManager.authenticate(this);
@@ -117,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
         JSONObject data = new JSONObject();
         try {
             data.put(KEY_IS_CORRECT, true);
+            data.put(KEY_USERNAME, username);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -128,16 +126,46 @@ public class MainActivity extends AppCompatActivity {
         JSONObject data = new JSONObject();
         try {
             data.put(KEY_IS_CORRECT, false);
+            data.put(KEY_USERNAME, username);
         } catch (JSONException e) {
             e.printStackTrace();
         }
         socketManager.emit(EVENT_CLEAR, data);
     }
 
+    @OnClick(R.id.button_play_pause)
+    void playPause() {
+        if (spotifyManager.isPlaying()) {
+            spotifyManager.pause();
+            buttonPlayPause.setText("PLAY");
+        } else {
+            spotifyManager.resume();
+            buttonPlayPause.setText("PAUSE");
+        }
+    }
+
+    @OnClick(R.id.button_play_five_seconds)
+    void playFiveSeconds() {
+        spotifyManager.play("spotify:track:2TpxZ7JUBn3uw46aR7qd6V", 5000);
+        buttonPlayPause.setText("PAUSE");
+    }
+
+    @OnClick(R.id.button_play_ten_seconds)
+    void playTenSeconds() {
+        spotifyManager.play("spotify:track:2TpxZ7JUBn3uw46aR7qd6V", 10000);
+        buttonPlayPause.setText("PAUSE");
+    }
+
+    @OnClick(R.id.button_play_thirty_seconds)
+    void playThirtySeconds() {
+        spotifyManager.play("spotify:track:2TpxZ7JUBn3uw46aR7qd6V", 30000);
+        buttonPlayPause.setText("PAUSE");
+    }
+
     @Override
     protected void onDestroy() {
         socketManager.destroy();
-        Spotify.destroyPlayer(spotifyManager);
+        spotifyManager.destroyPlayer(this);
         super.onDestroy();
     }
 }

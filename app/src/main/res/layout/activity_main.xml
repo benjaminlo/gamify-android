@@ -26,30 +26,25 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/response_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="invisible">
 
         <Button
-            android:id="@+id/button_right"
+            android:id="@+id/button_correct"
             style="?android:buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/button_right" />
+            android:text="@string/button_correct" />
 
         <Button
-            android:id="@+id/button_wrong"
+            android:id="@+id/button_incorrect"
             style="?android:buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/button_wrong" />
-
-        <Button
-            android:id="@+id/button_answer_allowed"
-            style="?android:buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/button_create_room" />
+            android:text="@string/button_incorrect" />
 
     </LinearLayout>
 

@@ -2,7 +2,7 @@
     <string name="app_name">Gamify</string>
 
     <!--Buttons-->
-    <string name="button_right">RIGHT</string>
-    <string name="button_wrong">WRONG</string>
+    <string name="button_correct">CORRECT</string>
+    <string name="button_incorrect">INCORRECT</string>
     <string name="button_create_room">ANSWER ALLOWED</string>
 </resources>

@@ -17,6 +17,15 @@ import com.spotify.sdk.android.player.PlayerState;
 import com.spotify.sdk.android.player.Spotify;
 import com.tribalhacks.gamify.utils.IntegerUtils;
 
+import kaaes.spotify.webapi.android.SpotifyApi;
+import kaaes.spotify.webapi.android.SpotifyService;
+import kaaes.spotify.webapi.android.models.Album;
+import kaaes.spotify.webapi.android.models.TrackSimple;
+import kaaes.spotify.webapi.android.models.TracksPager;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
 public class SpotifyManager implements PlayerNotificationCallback, ConnectionStateCallback {
 
     public static final int REQUEST_CODE = IntegerUtils.getFreshInt();
@@ -26,6 +35,8 @@ public class SpotifyManager implements PlayerNotificationCallback, ConnectionSta
     private static SpotifyManager instance;
     private Player player;
     private boolean isPlaying = false;
+    private SpotifyApi api = new SpotifyApi();
+    private SpotifyService spotify;
 
     private SpotifyManager() {
         // no-op
@@ -43,7 +54,10 @@ public class SpotifyManager implements PlayerNotificationCallback, ConnectionSta
         if (requestCode == SpotifyManager.REQUEST_CODE) {
             AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, data);
             if (response.getType() == AuthenticationResponse.Type.TOKEN) {
-                Config playerConfig = new Config(context, response.getAccessToken(), SpotifyKeys.CLIENT_ID);
+                String token = response.getAccessToken();
+                Config playerConfig = new Config(context, token, SpotifyKeys.CLIENT_ID);
+                api.setAccessToken(token);
+                spotify = api.getService();
                 Spotify.getPlayer(playerConfig, this, new Player.InitializationObserver() {
                     @Override
                     public void onInitialized(Player player) {
@@ -104,6 +118,10 @@ public class SpotifyManager implements PlayerNotificationCallback, ConnectionSta
     public void onPlaybackEvent(EventType eventType, PlayerState playerState) {
         Log.d(TAG, "onPlaybackEvent");
         switch (eventType) {
+            case PLAY:
+                Log.d(TAG, "onPlay");
+                // todo set the button to pause
+                break;
             default:
                 break;
         }
@@ -150,5 +168,30 @@ public class SpotifyManager implements PlayerNotificationCallback, ConnectionSta
 
     public boolean isPlaying() {
         return isPlaying;
+    }
+
+    public void playAlbum(String albumId) {
+        spotify.getAlbum(albumId, new Callback<Album>() {
+            @Override
+            public void success(Album album, Response response) {
+                Log.d("Album success", album.name);
+                for (TrackSimple track : album.tracks.items) {
+                    Log.d("Album success", track.name);
+                }
+                play(album.tracks.items.get(0).uri);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d("Album failure", error.toString());
+            }
+        });
+    }
+
+    public void playSearch(String searchQuery) {
+        new Thread(() -> {
+            TracksPager tracksPager = spotify.searchTracks(searchQuery);
+            play(tracksPager.tracks.items.get(0).uri);
+        }).start();
     }
 }

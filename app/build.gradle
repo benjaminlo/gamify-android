@@ -30,6 +30,8 @@ repositories {
     flatDir {
         dirs 'libs'
     }
+    mavenCentral()
+    maven { url "https://jitpack.io" }
 }
 
 dependencies {
@@ -51,6 +53,7 @@ dependencies {
     // spotify
     compile 'com.spotify.sdk:spotify-auth:1.0.0-beta13@aar'
     compile 'com.spotify.sdk:spotify-player:1.0.0-beta13@aar'
+    compile 'com.github.kaaes:spotify-web-api-android:0.4.1'
 
     // butter knife
     compile 'com.jakewharton:butterknife:8.4.0'

@@ -39,6 +39,17 @@
         android:layout_height="wrap_content"
         android:text="@string/button_create_room" />
 
+    <EditText
+        android:id="@+id/edit_text_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/button_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SEARCH"/>
+
     <Button
         android:id="@+id/button_play_five_seconds"
         android:layout_width="wrap_content"

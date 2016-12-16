@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.github.nkzawa.emitter.Emitter.Listener;
 import com.tribalhacks.gamify.spotify.SpotifyManager;
+import com.tribalhacks.gamify.utils.StringUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,6 +42,9 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.button_play_pause)
     Button buttonPlayPause;
+
+    @BindView(R.id.edit_text_search)
+    EditText editTextSearch;
 
     private SocketManager socketManager;
     private SpotifyManager spotifyManager;
@@ -142,6 +147,15 @@ public class MainActivity extends AppCompatActivity {
             spotifyManager.resume();
             buttonPlayPause.setText("PAUSE");
         }
+    }
+
+    @OnClick(R.id.button_search)
+    void onSearchButtonClicked() {
+        String searchQuery = editTextSearch.getText().toString();
+        if (!StringUtils.isEmptyOrNull(searchQuery)) {
+            spotifyManager.playSearch(searchQuery);
+        }
+        buttonPlayPause.setText("PAUSE");
     }
 
     @OnClick(R.id.button_play_five_seconds)

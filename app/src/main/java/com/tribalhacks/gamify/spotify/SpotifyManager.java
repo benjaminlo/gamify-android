@@ -20,12 +20,8 @@ import com.tribalhacks.gamify.utils.IntegerUtils;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
-import kaaes.spotify.webapi.android.models.Album;
-import kaaes.spotify.webapi.android.models.TrackSimple;
+import kaaes.spotify.webapi.android.models.Track;
 import kaaes.spotify.webapi.android.models.TracksPager;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 public class SpotifyManager implements PlayerNotificationCallback, ConnectionStateCallback {
 
@@ -38,6 +34,7 @@ public class SpotifyManager implements PlayerNotificationCallback, ConnectionSta
     private boolean isPlaying = false;
     private SpotifyApi api = new SpotifyApi();
     private SpotifyService spotify;
+    private Track selectedTrack;
 
     private SpotifyManager() {
         // no-op
@@ -137,13 +134,8 @@ public class SpotifyManager implements PlayerNotificationCallback, ConnectionSta
         }
     }
 
-    public void play(String uri) {
-        player.play(uri);
-        isPlaying = true;
-    }
-
-    public void play(String uri, int durationInMillis) {
-        play(uri);
+    public void play(int durationInMillis) {
+        player.play(selectedTrack.uri);
         new CountDownTimer(durationInMillis, durationInMillis) {
             @Override
             public void onTick(long l) {
@@ -171,22 +163,8 @@ public class SpotifyManager implements PlayerNotificationCallback, ConnectionSta
         return isPlaying;
     }
 
-    public void playAlbum(String albumId) {
-        spotify.getAlbum(albumId, new Callback<Album>() {
-            @Override
-            public void success(Album album, Response response) {
-                Log.d("Album success", album.name);
-                for (TrackSimple track : album.tracks.items) {
-                    Log.d("Album success", track.name);
-                }
-                play(album.tracks.items.get(0).uri);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.d("Album failure", error.toString());
-            }
-        });
+    public void setTrack(Track track) {
+        selectedTrack = track;
     }
 
     public void listSearch(final Activity activity, final String searchQuery, final RecyclerViewAdapter adapter) {

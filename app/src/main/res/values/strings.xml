@@ -4,5 +4,5 @@
     <!--Buttons-->
     <string name="button_right">RIGHT</string>
     <string name="button_wrong">WRONG</string>
-    <string name="button_create_room">CREATE ROOM</string>
+    <string name="button_create_room">ANSWER ALLOWED</string>
 </resources>

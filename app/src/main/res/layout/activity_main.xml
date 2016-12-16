@@ -5,10 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:padding="@dimen/activity_vertical_margin"
     tools:context="com.tribalhacks.gamify.MainActivity">
 
     <LinearLayout
@@ -25,6 +22,7 @@
             android:id="@+id/player_response"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -47,28 +45,45 @@
             android:text="@string/button_wrong" />
 
         <Button
-            android:id="@+id/button_create_room"
+            android:id="@+id/button_answer_allowed"
             style="?android:buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/button_create_room" />
+
     </LinearLayout>
 
-    <EditText
-        android:id="@+id/edit_text_search"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/button_search"
-        style="?android:buttonBarButtonStyle"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="SEARCH" />
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/edit_text_search"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="text" />
+
+        <Button
+            android:id="@+id/button_search"
+            style="?android:buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SEARCH" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/button_play_one_second"
+            style="?android:buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1 SEC" />
 
         <Button
             android:id="@+id/button_play_five_seconds"
@@ -85,18 +100,12 @@
             android:text="10 SEC" />
 
         <Button
-            android:id="@+id/button_play_thirty_seconds"
-            style="?android:buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="30 SEC" />
-
-        <Button
             android:id="@+id/button_play_pause"
             style="?android:buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="PLAY" />
+
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
@@ -104,4 +113,5 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
+
 </LinearLayout>

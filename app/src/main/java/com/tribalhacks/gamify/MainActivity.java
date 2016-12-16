@@ -1,10 +1,14 @@
 package com.tribalhacks.gamify;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -20,9 +24,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.tribalhacks.gamify.SocketManager.EVENT_ANSWER_ALLOWED;
 import static com.tribalhacks.gamify.SocketManager.EVENT_BUTTON_CLICKED;
 import static com.tribalhacks.gamify.SocketManager.EVENT_CLEAR;
-import static com.tribalhacks.gamify.SocketManager.EVENT_CREATE_ROOM;
 import static com.tribalhacks.gamify.SocketManager.EVENT_ROOM_CREATED;
 import static com.tribalhacks.gamify.SocketManager.EVENT_ROOM_ID;
 import static com.tribalhacks.gamify.SocketManager.EVENT_USERNAME;
@@ -33,7 +37,6 @@ import static com.tribalhacks.gamify.SocketManager.KEY_USERNAME;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String GAME_NAME_MUSIC = "Music Game";
     private static final String TAG = "GamifyMain";
 
     @BindView(R.id.room_id)
@@ -135,11 +138,22 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         adapter = new RecyclerViewAdapter(spotifyManager);
         recyclerView.setAdapter(adapter);
+
+        editTextSearch.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int keyCode, KeyEvent event) {
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    onSearchButtonClicked(view);
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
-    @OnClick(R.id.button_create_room)
+    @OnClick(R.id.button_answer_allowed)
     void emitCreateRoom() {
-        socketManager.emit(EVENT_CREATE_ROOM, GAME_NAME_MUSIC);
+        socketManager.emit(EVENT_ANSWER_ALLOWED, true);
     }
 
     @OnClick(R.id.button_right)
@@ -178,7 +192,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.button_search)
-    void onSearchButtonClicked() {
+    void onSearchButtonClicked(View view) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         String searchQuery = editTextSearch.getText().toString();
         if (!StringUtils.isEmptyOrNull(searchQuery)) {
             spotifyManager.listSearch(this, searchQuery, adapter);
@@ -186,21 +202,21 @@ public class MainActivity extends AppCompatActivity {
         buttonPlayPause.setText("PAUSE");
     }
 
+    @OnClick(R.id.button_play_one_second)
+    void playOneSecond() {
+        spotifyManager.play(1000);
+        buttonPlayPause.setText("PAUSE");
+    }
+
     @OnClick(R.id.button_play_five_seconds)
     void playFiveSeconds() {
-        spotifyManager.play("spotify:track:2TpxZ7JUBn3uw46aR7qd6V", 5000);
+        spotifyManager.play(5000);
         buttonPlayPause.setText("PAUSE");
     }
 
     @OnClick(R.id.button_play_ten_seconds)
     void playTenSeconds() {
-        spotifyManager.play("spotify:track:2TpxZ7JUBn3uw46aR7qd6V", 10000);
-        buttonPlayPause.setText("PAUSE");
-    }
-
-    @OnClick(R.id.button_play_thirty_seconds)
-    void playThirtySeconds() {
-        spotifyManager.play("spotify:track:2TpxZ7JUBn3uw46aR7qd6V", 30000);
+        spotifyManager.play(10000);
         buttonPlayPause.setText("PAUSE");
     }
 

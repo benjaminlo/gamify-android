@@ -77,7 +77,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    spotifyManager.play(track.uri);
+                    spotifyManager.setTrack(track);
                 }
             });
         }

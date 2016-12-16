@@ -12,7 +12,9 @@
         android:theme="@style/AppTheme">
 
         <!-- Main Activities -->
-        <activity android:name="com.tribalhacks.gamify.MainActivity">
+        <activity
+            android:name="com.tribalhacks.gamify.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

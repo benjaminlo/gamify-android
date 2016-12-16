@@ -15,6 +15,7 @@ import com.spotify.sdk.android.player.Player;
 import com.spotify.sdk.android.player.PlayerNotificationCallback;
 import com.spotify.sdk.android.player.PlayerState;
 import com.spotify.sdk.android.player.Spotify;
+import com.tribalhacks.gamify.RecyclerViewAdapter;
 import com.tribalhacks.gamify.utils.IntegerUtils;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
@@ -188,10 +189,18 @@ public class SpotifyManager implements PlayerNotificationCallback, ConnectionSta
         });
     }
 
-    public void playSearch(String searchQuery) {
-        new Thread(() -> {
-            TracksPager tracksPager = spotify.searchTracks(searchQuery);
-            play(tracksPager.tracks.items.get(0).uri);
+    public void listSearch(final Activity activity, final String searchQuery, final RecyclerViewAdapter adapter) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final TracksPager tracksPager = spotify.searchTracks(searchQuery);
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.setTracks(tracksPager.tracks.items);
+                    }
+                });
+            }
         }).start();
     }
 }

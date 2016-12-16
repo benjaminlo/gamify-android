@@ -3,6 +3,8 @@ package com.tribalhacks.gamify;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -46,43 +48,65 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.edit_text_search)
     EditText editTextSearch;
 
+    @BindView(R.id.recycler_view)
+    RecyclerView recyclerView;
+
     private SocketManager socketManager;
     private SpotifyManager spotifyManager;
+    private RecyclerViewAdapter adapter;
 
     private String username;
 
-    private Listener onRoomCreated = args -> {
-        final JSONObject data = (JSONObject) args[0];
-        runOnUiThread(() -> {
-            try {
-                roomId.setText(data.getString(EVENT_ROOM_ID));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        });
+    private Listener onRoomCreated = new Listener() {
+        @Override
+        public void call(Object... args) {
+            final JSONObject data = (JSONObject) args[0];
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        roomId.setText(data.getString(EVENT_ROOM_ID));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
     };
 
-    private Listener onPlayerResponded = args -> {
-        final JSONObject data = (JSONObject) args[0];
-        runOnUiThread(() -> {
-            try {
-                username = data.getString(EVENT_USERNAME);
-                playerResponse.setText(username);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        });
+    private Listener onPlayerResponded = new Listener() {
+        @Override
+        public void call(Object... args) {
+            final JSONObject data = (JSONObject) args[0];
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        username = data.getString(EVENT_USERNAME);
+                        playerResponse.setText(username);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
     };
 
-    private Listener onUserJoined = args -> {
-        final JSONObject data = (JSONObject) args[0];
-        runOnUiThread(() -> {
-            try {
-                JSONObject user = data.getJSONObject(KEY_USER);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        });
+    private Listener onUserJoined = new Listener() {
+        @Override
+        public void call(Object... args) {
+            final JSONObject data = (JSONObject) args[0];
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        JSONObject user = data.getJSONObject(KEY_USER);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
     };
 
     @Override
@@ -107,6 +131,10 @@ public class MainActivity extends AppCompatActivity {
 
         spotifyManager = SpotifyManager.getInstance();
         spotifyManager.authenticate(this);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        adapter = new RecyclerViewAdapter(spotifyManager);
+        recyclerView.setAdapter(adapter);
     }
 
     @OnClick(R.id.button_create_room)
@@ -153,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
     void onSearchButtonClicked() {
         String searchQuery = editTextSearch.getText().toString();
         if (!StringUtils.isEmptyOrNull(searchQuery)) {
-            spotifyManager.playSearch(searchQuery);
+            spotifyManager.listSearch(this, searchQuery, adapter);
         }
         buttonPlayPause.setText("PAUSE");
     }

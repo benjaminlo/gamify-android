@@ -11,33 +11,48 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.tribalhacks.gamify.MainActivity">
 
-    <TextView
-        android:id="@+id/room_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/player_response"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/button_right"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/button_right" />
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/button_wrong"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/button_wrong" />
+        <TextView
+            android:id="@+id/room_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-    <Button
-        android:id="@+id/button_create_room"
-        android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/player_response"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/button_create_room" />
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_right"
+            style="?android:buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_right" />
+
+        <Button
+            android:id="@+id/button_wrong"
+            style="?android:buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_wrong" />
+
+        <Button
+            android:id="@+id/button_create_room"
+            style="?android:buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_create_room" />
+    </LinearLayout>
 
     <EditText
         android:id="@+id/edit_text_search"
@@ -46,32 +61,47 @@
 
     <Button
         android:id="@+id/button_search"
+        style="?android:buttonBarButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="SEARCH"/>
+        android:text="SEARCH" />
 
-    <Button
-        android:id="@+id/button_play_five_seconds"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="PLAY 5 SECONDS"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/button_play_ten_seconds"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="PLAY 10 SECONDS"/>
+        <Button
+            android:id="@+id/button_play_five_seconds"
+            style="?android:buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="5 SEC" />
 
-    <Button
-        android:id="@+id/button_play_thirty_seconds"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="PLAY 30 SECONDS"/>
+        <Button
+            android:id="@+id/button_play_ten_seconds"
+            style="?android:buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10 SEC" />
 
-    <Button
-        android:id="@+id/button_play_pause"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="PLAY"/>
+        <Button
+            android:id="@+id/button_play_thirty_seconds"
+            style="?android:buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="30 SEC" />
 
+        <Button
+            android:id="@+id/button_play_pause"
+            style="?android:buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PLAY" />
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 </LinearLayout>

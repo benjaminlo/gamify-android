@@ -39,4 +39,28 @@
         android:layout_height="wrap_content"
         android:text="@string/button_create_room" />
 
+    <Button
+        android:id="@+id/button_play_five_seconds"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="PLAY 5 SECONDS"/>
+
+    <Button
+        android:id="@+id/button_play_ten_seconds"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="PLAY 10 SECONDS"/>
+
+    <Button
+        android:id="@+id/button_play_thirty_seconds"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="PLAY 30 SECONDS"/>
+
+    <Button
+        android:id="@+id/button_play_pause"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="PLAY"/>
+
 </LinearLayout>

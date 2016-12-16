@@ -13,10 +13,13 @@ public class SocketManager {
     public static final String EVENT_ROOM_ID = "roomId";
     public static final String EVENT_USERNAME = "username";
     public static final String EVENT_ROOM_CREATED = "room created";
+    public static final String EVENT_USER_JOINED = "user joined";
     public static final String EVENT_BUTTON_CLICKED = "button clicked";
     public static final String EVENT_CREATE_ROOM = "create room";
     public static final String EVENT_CLEAR = "clear";
     public static final String KEY_IS_CORRECT = "isCorrect";
+    public static final String KEY_USER = "user";
+    public static final String KEY_USERNAME = "username";
     private static final String URL = "http://10.0.1.252:3000";
     private static SocketManager instance;
 

@@ -26,6 +26,12 @@ android {
     }
 }
 
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
 dependencies {
     // local dependencies
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -41,6 +47,10 @@ dependencies {
 
     // socket.io
     compile 'com.github.nkzawa:socket.io-client:0.3.0'
+
+    // spotify
+    compile 'com.spotify.sdk:spotify-auth:1.0.0-beta13@aar'
+    compile 'com.spotify.sdk:spotify-player:1.0.0-beta13@aar'
 
     // butter knife
     compile 'com.jakewharton:butterknife:8.4.0'

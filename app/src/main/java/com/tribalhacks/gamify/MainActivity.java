@@ -208,6 +208,12 @@ public class MainActivity extends AppCompatActivity {
         buttonPlayPause.setText("PAUSE");
     }
 
+    @OnClick(R.id.button_play_three_seconds)
+    void playThreeSeconds() {
+        spotifyManager.play(3000);
+        buttonPlayPause.setText("PAUSE");
+    }
+
     @OnClick(R.id.button_play_five_seconds)
     void playFiveSeconds() {
         spotifyManager.play(5000);

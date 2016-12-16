@@ -86,6 +86,13 @@
             android:text="1 SEC" />
 
         <Button
+            android:id="@+id/button_play_three_seconds"
+            style="?android:buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3 SEC" />
+
+        <Button
             android:id="@+id/button_play_five_seconds"
             style="?android:buttonBarButtonStyle"
             android:layout_width="wrap_content"

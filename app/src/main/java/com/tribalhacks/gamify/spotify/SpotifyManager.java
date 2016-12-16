@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.CountDownTimer;
 import android.util.Log;
+import android.widget.Button;
 
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
@@ -14,18 +15,16 @@ import com.spotify.sdk.android.player.ConnectionStateCallback;
 import com.spotify.sdk.android.player.Player;
 import com.spotify.sdk.android.player.PlayerNotificationCallback;
 import com.spotify.sdk.android.player.PlayerState;
+import com.spotify.sdk.android.player.PlayerStateCallback;
 import com.spotify.sdk.android.player.Spotify;
 import com.tribalhacks.gamify.RecyclerViewAdapter;
+import com.tribalhacks.gamify.SocketManager;
 import com.tribalhacks.gamify.utils.IntegerUtils;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
-import kaaes.spotify.webapi.android.models.Album;
-import kaaes.spotify.webapi.android.models.TrackSimple;
+import kaaes.spotify.webapi.android.models.Track;
 import kaaes.spotify.webapi.android.models.TracksPager;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 public class SpotifyManager implements PlayerNotificationCallback, ConnectionStateCallback {
 
@@ -35,9 +34,10 @@ public class SpotifyManager implements PlayerNotificationCallback, ConnectionSta
     private static final String REDIRECT_URI = "gamify://callback";
     private static SpotifyManager instance;
     private Player player;
-    private boolean isPlaying = false;
     private SpotifyApi api = new SpotifyApi();
     private SpotifyService spotify;
+    private Track selectedTrack;
+    private Button playPauseButton;
 
     private SpotifyManager() {
         // no-op
@@ -76,8 +76,13 @@ public class SpotifyManager implements PlayerNotificationCallback, ConnectionSta
         }
     }
 
+    public void setPlayPauseButton(Button playPauseButton) {
+        this.playPauseButton = playPauseButton;
+    }
+
     public void destroyPlayer(Activity activity) {
         Spotify.destroyPlayer(activity);
+        playPauseButton = null;
     }
 
     public void authenticate(Activity activity) {
@@ -120,8 +125,14 @@ public class SpotifyManager implements PlayerNotificationCallback, ConnectionSta
         Log.d(TAG, "onPlaybackEvent");
         switch (eventType) {
             case PLAY:
-                Log.d(TAG, "onPlay");
-                // todo set the button to pause
+                if (playPauseButton != null) {
+                    playPauseButton.setText("PAUSE");
+                }
+                break;
+            case PAUSE:
+                if (playPauseButton != null) {
+                    playPauseButton.setText("RESUME");
+                }
                 break;
             default:
                 break;
@@ -137,56 +148,39 @@ public class SpotifyManager implements PlayerNotificationCallback, ConnectionSta
         }
     }
 
-    public void play(String uri) {
-        player.play(uri);
-        isPlaying = true;
-    }
+    public void play(int durationInMillis) {
+        if (selectedTrack != null) {
+            player.play(selectedTrack.uri);
+            new CountDownTimer(durationInMillis, durationInMillis) {
+                @Override
+                public void onTick(long l) {
 
-    public void play(String uri, int durationInMillis) {
-        play(uri);
-        new CountDownTimer(durationInMillis, durationInMillis) {
-            @Override
-            public void onTick(long l) {
-
-            }
-
-            @Override
-            public void onFinish() {
-                pause();
-            }
-        }.start();
-    }
-
-    public void pause() {
-        player.pause();
-        isPlaying = false;
-    }
-
-    public void resume() {
-        player.resume();
-        isPlaying = true;
-    }
-
-    public boolean isPlaying() {
-        return isPlaying;
-    }
-
-    public void playAlbum(String albumId) {
-        spotify.getAlbum(albumId, new Callback<Album>() {
-            @Override
-            public void success(Album album, Response response) {
-                Log.d("Album success", album.name);
-                for (TrackSimple track : album.tracks.items) {
-                    Log.d("Album success", track.name);
                 }
-                play(album.tracks.items.get(0).uri);
-            }
 
+                @Override
+                public void onFinish() {
+                    player.pause();
+                    SocketManager.getInstance().emit(SocketManager.EVENT_ANSWER_ALLOWED, true);
+                }
+            }.start();
+        }
+    }
+
+    public void playPause() {
+        player.getPlayerState(new PlayerStateCallback() {
             @Override
-            public void failure(RetrofitError error) {
-                Log.d("Album failure", error.toString());
+            public void onPlayerState(PlayerState playerState) {
+                if (playerState.playing) {
+                    player.pause();
+                } else {
+                    player.resume();
+                }
             }
         });
+    }
+
+    public void setTrack(Track track) {
+        selectedTrack = track;
     }
 
     public void listSearch(final Activity activity, final String searchQuery, final RecyclerViewAdapter adapter) {

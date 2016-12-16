@@ -33,6 +33,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
         notifyDataSetChanged();
     }
 
+    private void removeAllExcept(Track track) {
+        tracks.clear();
+        tracks.add(track);
+        notifyDataSetChanged();
+    }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_item_layout, parent, false);
@@ -41,7 +47,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ((ViewHolder) holder).onBind(spotifyManager, tracks.get(position));
+        ((ViewHolder) holder).onBind(this, spotifyManager, tracks.get(position));
     }
 
     @Override
@@ -64,7 +70,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
             ButterKnife.bind(this, itemView);
         }
 
-        void onBind(final SpotifyManager spotifyManager, final Track track) {
+        void onBind(final RecyclerViewAdapter recyclerViewAdapter, final SpotifyManager spotifyManager, final Track track) {
             Glide
                     .with(imageView.getContext())
                     .load(track.album.images.get(0).url)
@@ -72,12 +78,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
 
             nameView.setText(track.name);
             artistView.setText(track.artists.get(0).name);
-
-
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    spotifyManager.play(track.uri);
+                    spotifyManager.setTrack(track);
+                    recyclerViewAdapter.removeAllExcept(track);
                 }
             });
         }

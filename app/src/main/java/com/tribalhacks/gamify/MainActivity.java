@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -59,8 +61,11 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
     @BindView(R.id.response_buttons)
     LinearLayout responseButtonLayout;
 
-    @BindView(R.id.player)
-    LinearLayout player;
+    @BindView(R.id.game_controls)
+    LinearLayout gameControls;
+
+    @BindView(R.id.player_controls)
+    LinearLayout playerControls;
 
     @BindView(R.id.player_album_image)
     ImageView playerImageView;
@@ -75,6 +80,8 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
     private SpotifyManager spotifyManager;
     private RecyclerViewAdapter recyclerViewAdapter;
     private String username;
+    private Animation slideUpAnimation;
+    private Animation slideDownAnimation;
 
     private Listener onPlayerResponded = new Listener() {
         @Override
@@ -83,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    responseButtonLayout.setVisibility(View.VISIBLE);
+                    showGameControls();
                     try {
                         username = data.getString(EVENT_USERNAME);
                         playerResponse.setText(username);
@@ -130,11 +137,29 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
                 return false;
             }
         });
+
+        slideUpAnimation = AnimationUtils.loadAnimation(this, R.anim.slide_up);
+        slideDownAnimation = AnimationUtils.loadAnimation(this, R.anim.slide_down);
+        slideDownAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                gameControls.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
     }
 
     @OnClick(R.id.button_correct)
     void emitCorrect() {
-        responseButtonLayout.setVisibility(View.INVISIBLE);
         JSONObject data = new JSONObject();
         try {
             data.put(KEY_IS_CORRECT, true);
@@ -143,11 +168,11 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
             e.printStackTrace();
         }
         socketManager.emit(EVENT_CLEAR, data);
+        hideGameControls();
     }
 
     @OnClick(R.id.button_incorrect)
     void emitIncorrect() {
-        responseButtonLayout.setVisibility(View.INVISIBLE);
         JSONObject data = new JSONObject();
         try {
             data.put(KEY_IS_CORRECT, false);
@@ -156,6 +181,7 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
             e.printStackTrace();
         }
         socketManager.emit(EVENT_CLEAR, data);
+        hideGameControls();
     }
 
     @OnClick(R.id.button_play_pause)
@@ -206,14 +232,10 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
         Log.d(TAG, "onPlaybackEvent");
         switch (eventType) {
             case PLAY:
-                if (buttonPlayPause != null) {
-                    buttonPlayPause.setImageResource(R.drawable.ic_pause_black_48dp);
-                }
+                buttonPlayPause.setImageResource(R.drawable.ic_pause_black_48dp);
                 break;
             case PAUSE:
-                if (buttonPlayPause != null) {
-                    buttonPlayPause.setImageResource(R.drawable.ic_play_arrow_black_48dp);
-                }
+                buttonPlayPause.setImageResource(R.drawable.ic_play_arrow_black_48dp);
                 break;
             default:
                 break;
@@ -239,12 +261,26 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
         playerNameView.setText(track.name);
         playerArtistVIew.setText(track.artists.get(0).name);
 
-        if (player.getVisibility() == View.GONE) {
-            player.setVisibility(View.VISIBLE);
-            player.setAlpha(0.0f);
-            player.animate()
-                    .translationY(player.getHeight())
-                    .alpha(1.0f);
+        showPlayerControls();
+    }
+
+    private void showPlayerControls() {
+        if (playerControls.getVisibility() == View.GONE) {
+            playerControls.setVisibility(View.VISIBLE);
+            playerControls.startAnimation(slideUpAnimation);
+        }
+    }
+
+    private void showGameControls() {
+        if (gameControls.getVisibility() == View.GONE) {
+            gameControls.setVisibility(View.VISIBLE);
+            gameControls.startAnimation(slideUpAnimation);
+        }
+    }
+
+    private void hideGameControls() {
+        if (gameControls.getVisibility() == View.VISIBLE) {
+            gameControls.startAnimation(slideDownAnimation);
         }
     }
 }

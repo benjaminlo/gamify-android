@@ -10,9 +10,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="8dp"
-        android:gravity="center_vertical">
+        android:padding="8dp">
 
         <EditText
             android:id="@+id/edit_text_search"
@@ -40,130 +40,143 @@
         android:paddingRight="4dp" />
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <Button
-            android:id="@+id/button_play_one_second"
-            style="?android:buttonBarButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="1 SEC" />
-
-        <Button
-            android:id="@+id/button_play_three_seconds"
-            style="?android:buttonBarButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="3 SEC" />
-
-        <Button
-            android:id="@+id/button_play_five_seconds"
-            style="?android:buttonBarButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="5 SEC" />
-
-        <Button
-            android:id="@+id/button_play_ten_seconds"
-            style="?android:buttonBarButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="10 SEC" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/room_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/player_response"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/response_buttons"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/button_correct"
-            style="?android:buttonBarButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/button_correct" />
-
-        <Button
-            android:id="@+id/button_incorrect"
-            style="?android:buttonBarButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/button_incorrect" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/player"
+        android:id="@+id/game_controls"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/cardview_light_background"
         android:elevation="2dp"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:visibility="gone">
 
-        <ImageView
-            android:id="@+id/player_album_image"
-            android:layout_width="75dp"
-            android:layout_height="75dp" />
+        <TextView
+            android:id="@+id/room_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ROOM ID" />
+
+        <TextView
+            android:id="@+id/player_response"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PLAYER RESPONSE" />
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:id="@+id/response_buttons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/player_song_name"
-                android:layout_width="wrap_content"
+            <Button
+                android:id="@+id/button_correct"
+                style="?android:buttonBarButtonStyle"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="SONG NAME"
-                android:textSize="14sp" />
+                android:layout_weight="1"
+                android:text="@string/button_correct" />
 
-            <TextView
-                android:id="@+id/player_artist"
-                android:layout_width="wrap_content"
+            <Button
+                android:id="@+id/button_incorrect"
+                style="?android:buttonBarButtonStyle"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="ARTIST"
-                android:textSize="12sp" />
+                android:layout_weight="1"
+                android:text="@string/button_incorrect" />
 
         </LinearLayout>
 
-        <ImageButton
-            android:id="@+id/button_play_pause"
-            style="?android:buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_play_arrow_black_48dp"
-            android:text="PLAY" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/player_controls"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/cardview_light_background"
+        android:elevation="4dp"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/button_play_one_second"
+                style="?android:buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="1 SEC" />
+
+            <Button
+                android:id="@+id/button_play_three_seconds"
+                style="?android:buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="3 SEC" />
+
+            <Button
+                android:id="@+id/button_play_five_seconds"
+                style="?android:buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="5 SEC" />
+
+            <Button
+                android:id="@+id/button_play_ten_seconds"
+                style="?android:buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="10 SEC" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/player"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/player_album_image"
+                android:layout_width="75dp"
+                android:layout_height="75dp" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="4dp"
+                android:layout_marginStart="4dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/player_song_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/player_artist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/button_play_pause"
+                style="?android:buttonBarButtonStyle"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:src="@drawable/ic_play_arrow_black_48dp" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

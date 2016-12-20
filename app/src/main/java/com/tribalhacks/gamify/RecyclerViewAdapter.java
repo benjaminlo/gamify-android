@@ -82,7 +82,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
                 @Override
                 public void onClick(View view) {
                     spotifyManager.setTrack(track);
-                    recyclerViewAdapter.removeAllExcept(track);
                 }
             });
         }

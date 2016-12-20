@@ -25,7 +25,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static android.view.View.INVISIBLE;
 import static com.tribalhacks.gamify.SocketManager.EVENT_BUTTON_CLICKED;
 import static com.tribalhacks.gamify.SocketManager.EVENT_CLEAR;
 import static com.tribalhacks.gamify.SocketManager.EVENT_USERNAME;
@@ -118,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.button_correct)
     void emitCorrect() {
-        responseButtonLayout.setVisibility(INVISIBLE);
+        responseButtonLayout.setVisibility(View.INVISIBLE);
         JSONObject data = new JSONObject();
         try {
             data.put(KEY_IS_CORRECT, true);
@@ -131,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.button_incorrect)
     void emitIncorrect() {
-        responseButtonLayout.setVisibility(INVISIBLE);
+        responseButtonLayout.setVisibility(View.INVISIBLE);
         JSONObject data = new JSONObject();
         try {
             data.put(KEY_IS_CORRECT, false);

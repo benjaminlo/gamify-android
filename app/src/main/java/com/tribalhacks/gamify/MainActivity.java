@@ -10,8 +10,8 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
     TextView playerResponse;
 
     @BindView(R.id.button_play_pause)
-    Button buttonPlayPause;
+    ImageButton buttonPlayPause;
 
     @BindView(R.id.edit_text_search)
     EditText editTextSearch;
@@ -58,6 +58,9 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
 
     @BindView(R.id.response_buttons)
     LinearLayout responseButtonLayout;
+
+    @BindView(R.id.player)
+    LinearLayout player;
 
     @BindView(R.id.player_album_image)
     ImageView playerImageView;
@@ -204,12 +207,12 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
         switch (eventType) {
             case PLAY:
                 if (buttonPlayPause != null) {
-                    buttonPlayPause.setText("PAUSE");
+                    buttonPlayPause.setImageResource(R.drawable.ic_pause_black_48dp);
                 }
                 break;
             case PAUSE:
                 if (buttonPlayPause != null) {
-                    buttonPlayPause.setText("PLAY");
+                    buttonPlayPause.setImageResource(R.drawable.ic_play_arrow_black_48dp);
                 }
                 break;
             default:
@@ -235,5 +238,13 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
 
         playerNameView.setText(track.name);
         playerArtistVIew.setText(track.artists.get(0).name);
+
+        if (player.getVisibility() == View.GONE) {
+            player.setVisibility(View.VISIBLE);
+            player.setAlpha(0.0f);
+            player.animate()
+                    .translationY(player.getHeight())
+                    .alpha(1.0f);
+        }
     }
 }

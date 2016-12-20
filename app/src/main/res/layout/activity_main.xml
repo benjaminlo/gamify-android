@@ -11,7 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="8dp">
+        android:padding="8dp"
+        android:gravity="center_vertical">
 
         <EditText
             android:id="@+id/edit_text_search"
@@ -21,12 +22,12 @@
             android:hint="Search for a song"
             android:inputType="text" />
 
-        <Button
+        <ImageButton
             android:id="@+id/button_search"
             style="?android:buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="SEARCH" />
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_search_black_36dp" />
 
     </LinearLayout>
 
@@ -118,11 +119,13 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/player"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/cardview_light_background"
         android:elevation="2dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/player_album_image"
@@ -154,11 +157,12 @@
 
         </LinearLayout>
 
-        <Button
+        <ImageButton
             android:id="@+id/button_play_pause"
             style="?android:buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:src="@drawable/ic_play_arrow_black_48dp"
             android:text="PLAY" />
 
     </LinearLayout>

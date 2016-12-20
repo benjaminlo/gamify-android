@@ -6,15 +6,20 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.github.nkzawa.emitter.Emitter.Listener;
+import com.spotify.sdk.android.player.PlayerNotificationCallback;
+import com.spotify.sdk.android.player.PlayerState;
 import com.tribalhacks.gamify.spotify.SpotifyManager;
 import com.tribalhacks.gamify.utils.StringUtils;
 
@@ -24,6 +29,7 @@ import org.json.JSONObject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import kaaes.spotify.webapi.android.models.Track;
 
 import static com.tribalhacks.gamify.SocketManager.EVENT_BUTTON_CLICKED;
 import static com.tribalhacks.gamify.SocketManager.EVENT_CLEAR;
@@ -31,7 +37,7 @@ import static com.tribalhacks.gamify.SocketManager.EVENT_USERNAME;
 import static com.tribalhacks.gamify.SocketManager.KEY_IS_CORRECT;
 import static com.tribalhacks.gamify.SocketManager.KEY_USERNAME;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements PlayerNotificationCallback, TrackSelectedCallback {
 
     private static final String TAG = "GamifyMain";
 
@@ -53,9 +59,18 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.response_buttons)
     LinearLayout responseButtonLayout;
 
+    @BindView(R.id.player_album_image)
+    ImageView playerImageView;
+
+    @BindView(R.id.player_song_name)
+    TextView playerNameView;
+
+    @BindView(R.id.player_artist)
+    TextView playerArtistVIew;
+
     private SocketManager socketManager;
     private SpotifyManager spotifyManager;
-    private RecyclerViewAdapter adapter;
+    private RecyclerViewAdapter recyclerViewAdapter;
     private String username;
 
     private Listener onPlayerResponded = new Listener() {
@@ -81,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        spotifyManager.createPlayer(this, requestCode, resultCode, data);
+        spotifyManager.createPlayer(this, this, requestCode, resultCode, data);
     }
 
     @Override
@@ -97,11 +112,10 @@ public class MainActivity extends AppCompatActivity {
 
         spotifyManager = SpotifyManager.getInstance();
         spotifyManager.authenticate(this);
-        spotifyManager.setPlayPauseButton(buttonPlayPause);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        adapter = new RecyclerViewAdapter(spotifyManager);
-        recyclerView.setAdapter(adapter);
+        recyclerViewAdapter = new RecyclerViewAdapter(this, spotifyManager);
+        recyclerView.setAdapter(recyclerViewAdapter);
 
         editTextSearch.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -152,7 +166,8 @@ public class MainActivity extends AppCompatActivity {
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         String searchQuery = editTextSearch.getText().toString();
         if (!StringUtils.isEmptyOrNull(searchQuery)) {
-            spotifyManager.listSearch(this, searchQuery, adapter);
+            spotifyManager.listSearch(this, searchQuery, recyclerViewAdapter);
+            recyclerView.smoothScrollToPosition(0);
         }
     }
 
@@ -181,5 +196,44 @@ public class MainActivity extends AppCompatActivity {
         socketManager.destroy();
         spotifyManager.destroyPlayer(this);
         super.onDestroy();
+    }
+
+    @Override
+    public void onPlaybackEvent(EventType eventType, PlayerState playerState) {
+        Log.d(TAG, "onPlaybackEvent");
+        switch (eventType) {
+            case PLAY:
+                if (buttonPlayPause != null) {
+                    buttonPlayPause.setText("PAUSE");
+                }
+                break;
+            case PAUSE:
+                if (buttonPlayPause != null) {
+                    buttonPlayPause.setText("PLAY");
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void onPlaybackError(ErrorType errorType, String s) {
+        Log.d(TAG, "onPlaybackError");
+        switch (errorType) {
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void onTrackSelected(Track track) {
+        Glide
+                .with(playerImageView.getContext())
+                .load(track.album.images.get(0).url)
+                .into(playerImageView);
+
+        playerNameView.setText(track.name);
+        playerArtistVIew.setText(track.artists.get(0).name);
     }
 }

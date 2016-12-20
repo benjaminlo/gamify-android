@@ -5,13 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="@dimen/activity_vertical_margin"
     tools:context="com.tribalhacks.gamify.MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="8dp">
 
         <EditText
             android:id="@+id/edit_text_search"
@@ -34,7 +34,9 @@
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -43,37 +45,34 @@
         <Button
             android:id="@+id/button_play_one_second"
             style="?android:buttonBarButtonStyle"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="1 SEC" />
 
         <Button
             android:id="@+id/button_play_three_seconds"
             style="?android:buttonBarButtonStyle"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="3 SEC" />
 
         <Button
             android:id="@+id/button_play_five_seconds"
             style="?android:buttonBarButtonStyle"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="5 SEC" />
 
         <Button
             android:id="@+id/button_play_ten_seconds"
             style="?android:buttonBarButtonStyle"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="10 SEC" />
-
-        <Button
-            android:id="@+id/button_play_pause"
-            style="?android:buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="PLAY" />
 
     </LinearLayout>
 
@@ -103,33 +102,43 @@
         <Button
             android:id="@+id/button_correct"
             style="?android:buttonBarButtonStyle"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="@string/button_correct" />
 
         <Button
             android:id="@+id/button_incorrect"
             style="?android:buttonBarButtonStyle"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="@string/button_incorrect" />
 
     </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/cardview_light_background"
+        android:elevation="2dp"
         android:orientation="horizontal">
 
+        <ImageView
+            android:id="@+id/player_album_image"
+            android:layout_width="75dp"
+            android:layout_height="75dp" />
+
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/player_song_name"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="SONG NAME"
@@ -137,7 +146,7 @@
 
             <TextView
                 android:id="@+id/player_artist"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="ARTIST"
@@ -146,11 +155,12 @@
         </LinearLayout>
 
         <Button
+            android:id="@+id/button_play_pause"
+            style="?android:buttonBarButtonStyle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:text="PLAY/PAUSE" />
+            android:layout_height="match_parent"
+            android:text="PLAY" />
 
-    </RelativeLayout>
+    </LinearLayout>
 
 </LinearLayout>

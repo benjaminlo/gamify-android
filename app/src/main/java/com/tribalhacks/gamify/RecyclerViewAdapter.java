@@ -1,5 +1,6 @@
 package com.tribalhacks.gamify;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,20 +23,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
     private List<Track> tracks = new ArrayList<>();
 
     private SpotifyManager spotifyManager;
+    private TrackSelectedCallback trackSelectedCallback;
 
-    RecyclerViewAdapter(SpotifyManager spotifyManager) {
+    RecyclerViewAdapter(Context context, SpotifyManager spotifyManager) {
         super();
+        this.trackSelectedCallback = (TrackSelectedCallback) context;
         this.spotifyManager = spotifyManager;
     }
 
     public void setTracks(List<Track> tracks) {
         this.tracks = tracks;
-        notifyDataSetChanged();
-    }
-
-    private void removeAllExcept(Track track) {
-        tracks.clear();
-        tracks.add(track);
         notifyDataSetChanged();
     }
 
@@ -81,7 +78,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    spotifyManager.setTrack(track);
+                    spotifyManager.onTrackSelected(track);
+                    recyclerViewAdapter.trackSelectedCallback.onTrackSelected(track);
                 }
             });
         }

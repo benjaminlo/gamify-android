@@ -4,5 +4,16 @@
     <!--Buttons-->
     <string name="button_correct">CORRECT</string>
     <string name="button_incorrect">INCORRECT</string>
-    <string name="button_create_room">ANSWER ALLOWED</string>
+    <string name="button_one_sec">1 SEC</string>
+    <string name="button_three_sec">3 SEC</string>
+    <string name="button_five_sec">5 SEC</string>
+    <string name="button_ten_sec">10 SEC</string>
+
+    <!--Search Bar-->
+    <string name="search_bar_hint">Search for a song</string>
+
+    <!--Game Controls-->
+    <string name="room_id">Room ID: </string>
+    <string name="player_response">Player: </string>
+
 </resources>

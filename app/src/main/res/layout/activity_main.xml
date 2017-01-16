@@ -8,25 +8,26 @@
     tools:context="com.tribalhacks.gamify.MainActivity">
 
     <LinearLayout
+        android:id="@+id/search_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="8dp">
+        android:padding="@dimen/search_bar_padding">
 
         <EditText
             android:id="@+id/edit_text_search"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Search for a song"
+            android:hint="@string/search_bar_hint"
             android:inputType="text" />
 
         <ImageButton
             android:id="@+id/button_search"
             style="?android:buttonBarButtonStyle"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="@dimen/search_button_width"
+            android:layout_height="@dimen/search_button_height"
             android:src="@drawable/ic_search_black_36dp" />
 
     </LinearLayout>
@@ -36,29 +37,24 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:paddingLeft="4dp"
-        android:paddingRight="4dp" />
+        android:paddingLeft="@dimen/recycler_view_left_right_padding"
+        android:paddingRight="@dimen/recycler_view_left_right_padding" />
 
     <LinearLayout
         android:id="@+id/game_controls"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/cardview_light_background"
-        android:elevation="2dp"
-        android:orientation="vertical"
-        android:visibility="gone">
+        style="@style/GameControls">
 
         <TextView
             android:id="@+id/room_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ROOM ID" />
+            android:text="@string/room_id" />
 
         <TextView
             android:id="@+id/player_response"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="PLAYER RESPONSE" />
+            android:text="@string/player_response" />
 
         <LinearLayout
             android:id="@+id/response_buttons"
@@ -88,12 +84,7 @@
 
     <LinearLayout
         android:id="@+id/player_controls"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/cardview_light_background"
-        android:elevation="4dp"
-        android:orientation="vertical"
-        android:visibility="gone">
+        style="@style/PlayerControls">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -105,7 +96,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="1 SEC" />
+                android:text="@string/button_one_sec" />
 
             <Button
                 android:id="@+id/button_play_three_seconds"
@@ -113,7 +104,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="3 SEC" />
+                android:text="@string/button_three_sec" />
 
             <Button
                 android:id="@+id/button_play_five_seconds"
@@ -121,7 +112,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="5 SEC" />
+                android:text="@string/button_five_sec" />
 
             <Button
                 android:id="@+id/button_play_ten_seconds"
@@ -129,7 +120,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="10 SEC" />
+                android:text="@string/button_ten_sec" />
 
         </LinearLayout>
 
@@ -141,14 +132,14 @@
 
             <ImageView
                 android:id="@+id/player_album_image"
-                android:layout_width="75dp"
-                android:layout_height="75dp" />
+                android:layout_width="@dimen/player_album_image_width"
+                android:layout_height="@dimen/player_album_image_height" />
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="4dp"
-                android:layout_marginStart="4dp"
+                android:layout_marginEnd="@dimen/player_info_margin"
+                android:layout_marginStart="@dimen/player_info_margin"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:orientation="vertical">
@@ -158,22 +149,22 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:textSize="14sp" />
+                    android:textSize="@dimen/player_song_name_text_size" />
 
                 <TextView
                     android:id="@+id/player_artist"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:textSize="12sp" />
+                    android:textSize="@dimen/player_artist_text_size" />
 
             </LinearLayout>
 
             <ImageButton
                 android:id="@+id/button_play_pause"
                 style="?android:buttonBarButtonStyle"
-                android:layout_width="75dp"
-                android:layout_height="75dp"
+                android:layout_width="@dimen/play_pause_button_width"
+                android:layout_height="@dimen/play_pause_button_height"
                 android:src="@drawable/ic_play_arrow_black_48dp" />
 
         </LinearLayout>

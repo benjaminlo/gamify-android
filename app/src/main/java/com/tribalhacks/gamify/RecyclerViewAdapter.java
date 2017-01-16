@@ -1,6 +1,5 @@
 package com.tribalhacks.gamify;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,9 +24,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
     private SpotifyManager spotifyManager;
     private TrackSelectedCallback trackSelectedCallback;
 
-    RecyclerViewAdapter(Context context, SpotifyManager spotifyManager) {
+    RecyclerViewAdapter(TrackSelectedCallback trackSelectedCallback, SpotifyManager spotifyManager) {
         super();
-        this.trackSelectedCallback = (TrackSelectedCallback) context;
+        this.trackSelectedCallback = trackSelectedCallback;
         this.spotifyManager = spotifyManager;
     }
 

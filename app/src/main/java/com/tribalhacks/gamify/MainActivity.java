@@ -245,10 +245,6 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
     @Override
     public void onPlaybackError(ErrorType errorType, String s) {
         Log.d(TAG, "onPlaybackError");
-        switch (errorType) {
-            default:
-                break;
-        }
     }
 
     @Override

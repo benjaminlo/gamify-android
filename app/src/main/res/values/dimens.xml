@@ -7,7 +7,7 @@
     <dimen name="search_bar_padding">8dp</dimen>
     <dimen name="search_button_width">50dp</dimen>
     <dimen name="search_button_height">50dp</dimen>
-    
+
     <!--Player-->
     <dimen name="player_album_image_width">75dp</dimen>
     <dimen name="player_album_image_height">75dp</dimen>
@@ -24,6 +24,11 @@
     <dimen name="song_card_album_image_margin_end">16dp</dimen>
     <dimen name="song_card_song_name_text_size">14sp</dimen>
     <dimen name="song_card_artist_text_size">12sp</dimen>
+
+    <!--Empty Tracks State-->
+    <dimen name="error_icon_image_width">100dp</dimen>
+    <dimen name="error_icon_image_height">100dp</dimen>
+    <dimen name="error_message_text_size">16sp</dimen>
 
     <dimen name="recycler_view_left_right_padding">4dp</dimen>
 

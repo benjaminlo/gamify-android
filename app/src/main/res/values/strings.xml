@@ -16,4 +16,6 @@
     <string name="room_id">Room ID: </string>
     <string name="player_response">Player: </string>
 
+    <string name="no_songs_found">No songs found!</string>
+
 </resources>

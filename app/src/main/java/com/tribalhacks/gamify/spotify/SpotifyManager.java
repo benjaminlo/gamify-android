@@ -39,6 +39,7 @@ public class SpotifyManager implements ConnectionStateCallback, TrackSelectedCal
     private Track selectedTrack;
     private Track currentlyPlayingTrack;
     private boolean isNewTrack = true;
+    private CountDownTimer timer;
 
     private SpotifyManager() {
         // no-op
@@ -130,7 +131,7 @@ public class SpotifyManager implements ConnectionStateCallback, TrackSelectedCal
 
     public void play(int durationInMillis) {
         if (play()) {
-            new CountDownTimer(durationInMillis, durationInMillis) {
+            timer = new CountDownTimer(durationInMillis, durationInMillis) {
                 @Override
                 public void onTick(long l) {
 
@@ -146,6 +147,9 @@ public class SpotifyManager implements ConnectionStateCallback, TrackSelectedCal
     }
 
     public void playPause() {
+        if (timer != null) {
+            timer.cancel();
+        }
         player.getPlayerState(new PlayerStateCallback() {
             @Override
             public void onPlayerState(PlayerState playerState) {

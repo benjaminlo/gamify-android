@@ -76,6 +76,9 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
     @BindView(R.id.player_artist)
     TextView playerArtistVIew;
 
+    @BindView(R.id.tracks_empty_state)
+    LinearLayout tracksEmptyState;
+
     private SocketManager socketManager;
     private SpotifyManager spotifyManager;
     private RecyclerViewAdapter recyclerViewAdapter;
@@ -191,10 +194,11 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
 
     @OnClick(R.id.button_search)
     void onSearchButtonClicked(View view) {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         String searchQuery = editTextSearch.getText().toString();
         if (!StringUtils.isEmptyOrNull(searchQuery)) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
             spotifyManager.listSearch(this, searchQuery, recyclerViewAdapter);
             recyclerView.smoothScrollToPosition(0);
         }
@@ -278,5 +282,13 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
         if (gameControls.getVisibility() == View.VISIBLE) {
             gameControls.startAnimation(slideDownAnimation);
         }
+    }
+
+    public void showTracksEmptyState() {
+        tracksEmptyState.setVisibility(View.VISIBLE);
+    }
+
+    public void hideTracksEmptyState() {
+        tracksEmptyState.setVisibility(View.GONE);
     }
 }

@@ -16,6 +16,7 @@ import com.spotify.sdk.android.player.PlayerNotificationCallback;
 import com.spotify.sdk.android.player.PlayerState;
 import com.spotify.sdk.android.player.PlayerStateCallback;
 import com.spotify.sdk.android.player.Spotify;
+import com.tribalhacks.gamify.MainActivity;
 import com.tribalhacks.gamify.RecyclerViewAdapter;
 import com.tribalhacks.gamify.SocketManager;
 import com.tribalhacks.gamify.TrackSelectedCallback;
@@ -158,7 +159,7 @@ public class SpotifyManager implements ConnectionStateCallback, TrackSelectedCal
         });
     }
 
-    public void listSearch(final Activity activity, final String searchQuery, final RecyclerViewAdapter adapter) {
+    public void listSearch(final MainActivity activity, final String searchQuery, final RecyclerViewAdapter adapter) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -166,7 +167,12 @@ public class SpotifyManager implements ConnectionStateCallback, TrackSelectedCal
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        adapter.setTracks(tracksPager.tracks.items);
+                        if (tracksPager != null && !tracksPager.tracks.items.isEmpty()) {
+                            activity.hideTracksEmptyState();
+                            adapter.setTracks(tracksPager.tracks.items);
+                        } else {
+                            activity.showTracksEmptyState();
+                        }
                     }
                 });
             }

@@ -37,7 +37,8 @@ public class SpotifyManager implements ConnectionStateCallback, TrackSelectedCal
     private SpotifyApi api = new SpotifyApi();
     private SpotifyService spotify;
     private Track selectedTrack;
-    private boolean isNewSong;
+    private Track currentlyPlayingTrack;
+    private boolean isNewTrack = true;
 
     private SpotifyManager() {
         // no-op
@@ -118,7 +119,9 @@ public class SpotifyManager implements ConnectionStateCallback, TrackSelectedCal
 
     private boolean play() {
         if (selectedTrack != null) {
+            currentlyPlayingTrack = selectedTrack;
             player.play(selectedTrack.uri);
+            isNewTrack = false;
             return true;
         }
 
@@ -148,9 +151,8 @@ public class SpotifyManager implements ConnectionStateCallback, TrackSelectedCal
             public void onPlayerState(PlayerState playerState) {
                 if (playerState.playing) {
                     player.pause();
-                } else if (isNewSong) {
+                } else if (isNewTrack) {
                     play();
-                    isNewSong = false;
                 } else {
                     player.resume();
                 }
@@ -176,6 +178,8 @@ public class SpotifyManager implements ConnectionStateCallback, TrackSelectedCal
     @Override
     public void onTrackSelected(Track track) {
         selectedTrack = track;
-        isNewSong = true;
+        if (currentlyPlayingTrack != null) {
+            isNewTrack = !selectedTrack.uri.equals(currentlyPlayingTrack.uri);
+        }
     }
 }

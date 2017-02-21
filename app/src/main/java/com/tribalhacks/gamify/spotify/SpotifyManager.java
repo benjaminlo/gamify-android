@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.CountDownTimer;
 import android.util.Log;
-import android.widget.Button;
 
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
@@ -19,6 +18,7 @@ import com.spotify.sdk.android.player.PlayerStateCallback;
 import com.spotify.sdk.android.player.Spotify;
 import com.tribalhacks.gamify.RecyclerViewAdapter;
 import com.tribalhacks.gamify.SocketManager;
+import com.tribalhacks.gamify.TrackSelectedCallback;
 import com.tribalhacks.gamify.utils.IntegerUtils;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
@@ -26,7 +26,7 @@ import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Track;
 import kaaes.spotify.webapi.android.models.TracksPager;
 
-public class SpotifyManager implements PlayerNotificationCallback, ConnectionStateCallback {
+public class SpotifyManager implements ConnectionStateCallback, TrackSelectedCallback {
 
     public static final int REQUEST_CODE = IntegerUtils.getFreshInt();
 
@@ -37,7 +37,7 @@ public class SpotifyManager implements PlayerNotificationCallback, ConnectionSta
     private SpotifyApi api = new SpotifyApi();
     private SpotifyService spotify;
     private Track selectedTrack;
-    private Button playPauseButton;
+    private boolean isNewSong;
 
     private SpotifyManager() {
         // no-op
@@ -51,7 +51,8 @@ public class SpotifyManager implements PlayerNotificationCallback, ConnectionSta
         return instance;
     }
 
-    public void createPlayer(Context context, int requestCode, int resultCode, Intent data) {
+    public void createPlayer(Context context, final PlayerNotificationCallback playerNotificationCallback,
+                             int requestCode, int resultCode, Intent data) {
         if (requestCode == SpotifyManager.REQUEST_CODE) {
             AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, data);
             if (response.getType() == AuthenticationResponse.Type.TOKEN) {
@@ -63,7 +64,7 @@ public class SpotifyManager implements PlayerNotificationCallback, ConnectionSta
                     @Override
                     public void onInitialized(Player player) {
                         player.addConnectionStateCallback(SpotifyManager.this);
-                        player.addPlayerNotificationCallback(SpotifyManager.this);
+                        player.addPlayerNotificationCallback(playerNotificationCallback);
                         SpotifyManager.this.player = player;
                     }
 
@@ -76,13 +77,8 @@ public class SpotifyManager implements PlayerNotificationCallback, ConnectionSta
         }
     }
 
-    public void setPlayPauseButton(Button playPauseButton) {
-        this.playPauseButton = playPauseButton;
-    }
-
     public void destroyPlayer(Activity activity) {
         Spotify.destroyPlayer(activity);
-        playPauseButton = null;
     }
 
     public void authenticate(Activity activity) {
@@ -120,37 +116,17 @@ public class SpotifyManager implements PlayerNotificationCallback, ConnectionSta
         Log.d(TAG, "onConnectionMessage");
     }
 
-    @Override
-    public void onPlaybackEvent(EventType eventType, PlayerState playerState) {
-        Log.d(TAG, "onPlaybackEvent");
-        switch (eventType) {
-            case PLAY:
-                if (playPauseButton != null) {
-                    playPauseButton.setText("PAUSE");
-                }
-                break;
-            case PAUSE:
-                if (playPauseButton != null) {
-                    playPauseButton.setText("RESUME");
-                }
-                break;
-            default:
-                break;
+    private boolean play() {
+        if (selectedTrack != null) {
+            player.play(selectedTrack.uri);
+            return true;
         }
-    }
 
-    @Override
-    public void onPlaybackError(ErrorType errorType, String s) {
-        Log.d(TAG, "onPlaybackError");
-        switch (errorType) {
-            default:
-                break;
-        }
+        return false;
     }
 
     public void play(int durationInMillis) {
-        if (selectedTrack != null) {
-            player.play(selectedTrack.uri);
+        if (play()) {
             new CountDownTimer(durationInMillis, durationInMillis) {
                 @Override
                 public void onTick(long l) {
@@ -172,15 +148,14 @@ public class SpotifyManager implements PlayerNotificationCallback, ConnectionSta
             public void onPlayerState(PlayerState playerState) {
                 if (playerState.playing) {
                     player.pause();
+                } else if (isNewSong) {
+                    play();
+                    isNewSong = false;
                 } else {
                     player.resume();
                 }
             }
         });
-    }
-
-    public void setTrack(Track track) {
-        selectedTrack = track;
     }
 
     public void listSearch(final Activity activity, final String searchQuery, final RecyclerViewAdapter adapter) {
@@ -196,5 +171,11 @@ public class SpotifyManager implements PlayerNotificationCallback, ConnectionSta
                 });
             }
         }).start();
+    }
+
+    @Override
+    public void onTrackSelected(Track track) {
+        selectedTrack = track;
+        isNewSong = true;
     }
 }

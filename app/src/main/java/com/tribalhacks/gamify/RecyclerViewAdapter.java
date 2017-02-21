@@ -22,20 +22,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
     private List<Track> tracks = new ArrayList<>();
 
     private SpotifyManager spotifyManager;
+    private TrackSelectedCallback trackSelectedCallback;
 
-    RecyclerViewAdapter(SpotifyManager spotifyManager) {
+    RecyclerViewAdapter(TrackSelectedCallback trackSelectedCallback, SpotifyManager spotifyManager) {
         super();
+        this.trackSelectedCallback = trackSelectedCallback;
         this.spotifyManager = spotifyManager;
     }
 
     public void setTracks(List<Track> tracks) {
         this.tracks = tracks;
-        notifyDataSetChanged();
-    }
-
-    private void removeAllExcept(Track track) {
-        tracks.clear();
-        tracks.add(track);
         notifyDataSetChanged();
     }
 
@@ -81,8 +77,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    spotifyManager.setTrack(track);
-                    recyclerViewAdapter.removeAllExcept(track);
+                    spotifyManager.onTrackSelected(track);
+                    recyclerViewAdapter.trackSelectedCallback.onTrackSelected(track);
                 }
             });
         }

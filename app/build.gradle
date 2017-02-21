@@ -57,4 +57,8 @@ dependencies {
     // butter knife
     compile 'com.jakewharton:butterknife:8.4.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+
+    // droid parts
+    compile 'org.droidparts:droidparts:2.9.8'
+    compile 'org.droidparts:droidparts-support:2.9.8'
 }

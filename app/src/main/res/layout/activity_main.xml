@@ -15,10 +15,11 @@
         android:orientation="horizontal"
         android:padding="@dimen/search_bar_padding">
 
-        <EditText
+        <org.droidparts.widget.ClearableEditText
             android:id="@+id/edit_text_search"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/search_edit_text_right_margin"
             android:layout_weight="1"
             android:hint="@string/search_bar_hint"
             android:inputType="text" />

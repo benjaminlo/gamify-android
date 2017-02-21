@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,6 +24,7 @@ import com.spotify.sdk.android.player.PlayerState;
 import com.tribalhacks.gamify.spotify.SpotifyManager;
 import com.tribalhacks.gamify.utils.StringUtils;
 
+import org.droidparts.widget.ClearableEditText;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
     ImageButton buttonPlayPause;
 
     @BindView(R.id.edit_text_search)
-    EditText editTextSearch;
+    ClearableEditText editTextSearch;
 
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;

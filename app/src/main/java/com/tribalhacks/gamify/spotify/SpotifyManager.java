@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.CountDownTimer;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
@@ -17,15 +18,20 @@ import com.spotify.sdk.android.player.PlayerState;
 import com.spotify.sdk.android.player.PlayerStateCallback;
 import com.spotify.sdk.android.player.Spotify;
 import com.tribalhacks.gamify.MainActivity;
+import com.tribalhacks.gamify.R;
 import com.tribalhacks.gamify.RecyclerViewAdapter;
 import com.tribalhacks.gamify.SocketManager;
 import com.tribalhacks.gamify.TrackSelectedCallback;
 import com.tribalhacks.gamify.utils.IntegerUtils;
+import com.tribalhacks.gamify.utils.StringUtils;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
+import kaaes.spotify.webapi.android.SpotifyCallback;
+import kaaes.spotify.webapi.android.SpotifyError;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Track;
 import kaaes.spotify.webapi.android.models.TracksPager;
+import retrofit.client.Response;
 
 public class SpotifyManager implements ConnectionStateCallback, TrackSelectedCallback {
 
@@ -160,23 +166,33 @@ public class SpotifyManager implements ConnectionStateCallback, TrackSelectedCal
     }
 
     public void listSearch(final MainActivity activity, final String searchQuery, final RecyclerViewAdapter adapter) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final TracksPager tracksPager = spotify.searchTracks(searchQuery);
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (tracksPager != null && !tracksPager.tracks.items.isEmpty()) {
-                            activity.hideTracksEmptyState();
-                            adapter.setTracks(tracksPager.tracks.items);
-                        } else {
-                            activity.showTracksEmptyState();
-                        }
+        if (spotify != null) {
+            spotify.searchTracks(searchQuery, new SpotifyCallback<TracksPager>() {
+                @Override
+                public void failure(SpotifyError spotifyError) {
+                    String errorMessage = activity.getResources().getString(R.string.network_error);
+                    if (!StringUtils.isEmptyOrNull(errorMessage)) {
+                        Toast.makeText(activity, errorMessage, Toast.LENGTH_SHORT).show();
                     }
-                });
-            }
-        }).start();
+                }
+
+                @Override
+                public void success(final TracksPager tracksPager, Response response) {
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (tracksPager != null && !tracksPager.tracks.items.isEmpty()) {
+                                activity.hideTracksEmptyState();
+                                adapter.setTracks(tracksPager.tracks.items);
+                            } else {
+                                activity.showTracksEmptyState();
+                            }
+                        }
+                    });
+
+                }
+            });
+        }
     }
 
     @Override

@@ -16,6 +16,8 @@
     <string name="room_id">Room ID: </string>
     <string name="player_response">Player: </string>
 
+    <!--Error Messages-->
     <string name="no_songs_found">No songs found!</string>
+    <string name="network_error">Could not load! Please check your network connection and try again.</string>
 
 </resources>

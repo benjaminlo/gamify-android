@@ -197,6 +197,8 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
         if (!StringUtils.isEmptyOrNull(searchQuery)) {
             spotifyManager.listSearch(this, searchQuery, recyclerViewAdapter);
             recyclerView.smoothScrollToPosition(0);
+        } else {
+            spotifyManager.getMyPlaylists(this, recyclerViewAdapter);
         }
     }
 

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.CountDownTimer;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
@@ -22,9 +23,15 @@ import com.tribalhacks.gamify.TrackSelectedCallback;
 import com.tribalhacks.gamify.utils.IntegerUtils;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
+import kaaes.spotify.webapi.android.SpotifyCallback;
+import kaaes.spotify.webapi.android.SpotifyError;
 import kaaes.spotify.webapi.android.SpotifyService;
+import kaaes.spotify.webapi.android.models.Pager;
+import kaaes.spotify.webapi.android.models.Playlist;
+import kaaes.spotify.webapi.android.models.PlaylistSimple;
 import kaaes.spotify.webapi.android.models.Track;
 import kaaes.spotify.webapi.android.models.TracksPager;
+import retrofit.client.Response;
 
 public class SpotifyManager implements ConnectionStateCallback, TrackSelectedCallback {
 
@@ -177,5 +184,43 @@ public class SpotifyManager implements ConnectionStateCallback, TrackSelectedCal
     public void onTrackSelected(Track track) {
         selectedTrack = track;
         isNewSong = true;
+    }
+
+    public void getMyPlaylists(final Activity activity, final RecyclerViewAdapter adapter) {
+        if (spotify != null) {
+            spotify.getMyPlaylists(new SpotifyCallback<Pager<PlaylistSimple>>() {
+                @Override
+                public void failure(SpotifyError spotifyError) {
+
+                }
+
+                @Override
+                public void success(final Pager<PlaylistSimple> playlistSimplePager, Response response) {
+                    if (playlistSimplePager != null && playlistSimplePager.items != null) {
+                        PlaylistSimple playlist = playlistSimplePager.items.get(0);
+                        String playlistId = playlist.id;
+                        String ownerId = playlist.owner.id;
+
+                        spotify.getPlaylist(ownerId, playlistId, new SpotifyCallback<Playlist>() {
+                            @Override
+                            public void failure(SpotifyError spotifyError) {
+
+                            }
+
+                            @Override
+                            public void success(final Playlist playlist, Response response) {
+                                activity.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        adapter.setPlaylistTracks(playlist.tracks.items);
+                                    }
+                                });
+                                Toast.makeText(activity, "Playlist Name: " + playlist.name, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }
+            });
+        }
     }
 }

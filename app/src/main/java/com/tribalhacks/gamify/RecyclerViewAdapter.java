@@ -15,6 +15,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import kaaes.spotify.webapi.android.models.PlaylistTrack;
 import kaaes.spotify.webapi.android.models.Track;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter {
@@ -32,6 +33,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
 
     public void setTracks(List<Track> tracks) {
         this.tracks = tracks;
+        notifyDataSetChanged();
+    }
+
+    public void setPlaylistTracks(List<PlaylistTrack> playlistTracks) {
+        this.tracks.clear();
+        for (PlaylistTrack playlistTrack : playlistTracks) {
+            this.tracks.add(playlistTrack.track);
+        }
         notifyDataSetChanged();
     }
 

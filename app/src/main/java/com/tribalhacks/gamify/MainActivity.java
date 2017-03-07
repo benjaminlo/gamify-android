@@ -126,8 +126,12 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
             }
         });
 
-        PlaylistFragment playlistFragment = new PlaylistFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, playlistFragment).commit();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment_container, new PlaylistFragment())
+                .commit();
+//        getSupportFragmentManager().beginTransaction()
+//                .add(R.id.fragment_container, new TrackFragment())
+//                .commit();
     }
 
     @OnClick(R.id.button_correct)

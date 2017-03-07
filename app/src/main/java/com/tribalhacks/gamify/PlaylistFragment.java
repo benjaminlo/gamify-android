@@ -1,10 +1,10 @@
 package com.tribalhacks.gamify;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
@@ -26,8 +26,8 @@ public class PlaylistFragment extends Fragment {//implements TrackSelectedCallba
     @BindView(R.id.edit_text_search)
     EditText editTextSearch;
 
-    @BindView(R.id.recycler_view)
-    RecyclerView recyclerView;
+    @BindView(R.id.playlist_recycler_view)
+    RecyclerView playlistRecyclerView;
 
     private SpotifyManager spotifyManager;
     //    private TrackRecyclerViewAdapter trackRecyclerViewAdapter;
@@ -42,11 +42,11 @@ public class PlaylistFragment extends Fragment {//implements TrackSelectedCallba
 
         spotifyManager = SpotifyManager.getInstance();
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        playlistRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
 //        trackRecyclerViewAdapter = new TrackRecyclerViewAdapter(this, spotifyManager);
-//        recyclerView.setAdapter(trackRecyclerViewAdapter);
+//        playlistRecyclerView.setAdapter(trackRecyclerViewAdapter);
         playlistRecyclerViewAdapter = new PlaylistRecyclerViewAdapter(spotifyManager);
-        recyclerView.setAdapter(playlistRecyclerViewAdapter);
+        playlistRecyclerView.setAdapter(playlistRecyclerViewAdapter);
 
         editTextSearch.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -64,14 +64,19 @@ public class PlaylistFragment extends Fragment {//implements TrackSelectedCallba
 
     @OnClick(R.id.button_search)
     void onSearchButtonClicked(View view) {
-        Activity activity = getActivity();
+        FragmentActivity activity = getActivity();
         if (activity != null) {
             InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             String searchQuery = editTextSearch.getText().toString();
             if (!StringUtils.isEmptyOrNull(searchQuery)) {
 //            spotifyManager.listSearch(this, searchQuery, trackRecyclerViewAdapter);
-                recyclerView.smoothScrollToPosition(0);
+                playlistRecyclerView.smoothScrollToPosition(0);
+
+                activity.getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new TrackFragment())
+                        .addToBackStack(null)
+                        .commit();
             } else {
 //            spotifyManager.getMyPlaylists(this, trackRecyclerViewAdapter);
                 spotifyManager.getMyPlaylists(activity, playlistRecyclerViewAdapter);

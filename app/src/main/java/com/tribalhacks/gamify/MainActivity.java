@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
 
     private SocketManager socketManager;
     private SpotifyManager spotifyManager;
-    private RecyclerViewAdapter recyclerViewAdapter;
+    private TrackRecyclerViewAdapter trackRecyclerViewAdapter;
     private String username;
     private Animation slideUpAnimation;
     private Animation slideDownAnimation;
@@ -124,8 +124,8 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
         spotifyManager.authenticate(this);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        recyclerViewAdapter = new RecyclerViewAdapter(this, spotifyManager);
-        recyclerView.setAdapter(recyclerViewAdapter);
+        trackRecyclerViewAdapter = new TrackRecyclerViewAdapter(this, spotifyManager);
+        recyclerView.setAdapter(trackRecyclerViewAdapter);
 
         editTextSearch.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -195,10 +195,10 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         String searchQuery = editTextSearch.getText().toString();
         if (!StringUtils.isEmptyOrNull(searchQuery)) {
-            spotifyManager.listSearch(this, searchQuery, recyclerViewAdapter);
+            spotifyManager.listSearch(this, searchQuery, trackRecyclerViewAdapter);
             recyclerView.smoothScrollToPosition(0);
         } else {
-            spotifyManager.getMyPlaylists(this, recyclerViewAdapter);
+            spotifyManager.getMyPlaylists(this, trackRecyclerViewAdapter);
         }
     }
 

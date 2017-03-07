@@ -18,14 +18,14 @@ import butterknife.ButterKnife;
 import kaaes.spotify.webapi.android.models.PlaylistTrack;
 import kaaes.spotify.webapi.android.models.Track;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter {
+public class TrackRecyclerViewAdapter extends RecyclerView.Adapter {
 
     private List<Track> tracks = new ArrayList<>();
 
     private SpotifyManager spotifyManager;
     private TrackSelectedCallback trackSelectedCallback;
 
-    RecyclerViewAdapter(TrackSelectedCallback trackSelectedCallback, SpotifyManager spotifyManager) {
+    TrackRecyclerViewAdapter(TrackSelectedCallback trackSelectedCallback, SpotifyManager spotifyManager) {
         super();
         this.trackSelectedCallback = trackSelectedCallback;
         this.spotifyManager = spotifyManager;
@@ -46,7 +46,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_item_layout, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_item_track_layout, parent, false);
         return new ViewHolder(view);
     }
 
@@ -75,7 +75,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
             ButterKnife.bind(this, itemView);
         }
 
-        void onBind(final RecyclerViewAdapter recyclerViewAdapter, final SpotifyManager spotifyManager, final Track track) {
+        void onBind(final TrackRecyclerViewAdapter trackRecyclerViewAdapter, final SpotifyManager spotifyManager, final Track track) {
             Glide
                     .with(imageView.getContext())
                     .load(track.album.images.get(0).url)
@@ -87,7 +87,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
                 @Override
                 public void onClick(View view) {
                     spotifyManager.onTrackSelected(track);
-                    recyclerViewAdapter.trackSelectedCallback.onTrackSelected(track);
+                    trackRecyclerViewAdapter.trackSelectedCallback.onTrackSelected(track);
                 }
             });
         }

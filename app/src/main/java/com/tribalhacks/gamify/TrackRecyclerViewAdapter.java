@@ -87,7 +87,7 @@ public class TrackRecyclerViewAdapter extends RecyclerView.Adapter {
                 @Override
                 public void onClick(View view) {
                     spotifyManager.onTrackSelected(track);
-                    trackRecyclerViewAdapter.trackSelectedCallback.onTrackSelected(track);
+//                    trackRecyclerViewAdapter.trackSelectedCallback.onTrackSelected(track);
                 }
             });
         }

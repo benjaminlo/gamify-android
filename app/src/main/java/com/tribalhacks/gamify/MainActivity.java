@@ -18,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.github.nkzawa.emitter.Emitter.Listener;
 import com.spotify.sdk.android.player.PlayerNotificationCallback;
 import com.spotify.sdk.android.player.PlayerState;
@@ -31,7 +30,6 @@ import org.json.JSONObject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import kaaes.spotify.webapi.android.models.Track;
 
 import static com.tribalhacks.gamify.SocketManager.EVENT_BUTTON_CLICKED;
 import static com.tribalhacks.gamify.SocketManager.EVENT_CLEAR;
@@ -39,7 +37,7 @@ import static com.tribalhacks.gamify.SocketManager.EVENT_USERNAME;
 import static com.tribalhacks.gamify.SocketManager.KEY_IS_CORRECT;
 import static com.tribalhacks.gamify.SocketManager.KEY_USERNAME;
 
-public class MainActivity extends AppCompatActivity implements PlayerNotificationCallback, TrackSelectedCallback {
+public class MainActivity extends AppCompatActivity implements PlayerNotificationCallback {//, TrackSelectedCallback {
 
     private static final String TAG = "GamifyMain";
 
@@ -78,7 +76,8 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
 
     private SocketManager socketManager;
     private SpotifyManager spotifyManager;
-    private TrackRecyclerViewAdapter trackRecyclerViewAdapter;
+    //    private TrackRecyclerViewAdapter trackRecyclerViewAdapter;
+    private PlaylistRecyclerViewAdapter playlistRecyclerViewAdapter;
     private String username;
     private Animation slideUpAnimation;
     private Animation slideDownAnimation;
@@ -124,8 +123,10 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
         spotifyManager.authenticate(this);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        trackRecyclerViewAdapter = new TrackRecyclerViewAdapter(this, spotifyManager);
-        recyclerView.setAdapter(trackRecyclerViewAdapter);
+//        trackRecyclerViewAdapter = new TrackRecyclerViewAdapter(this, spotifyManager);
+//        recyclerView.setAdapter(trackRecyclerViewAdapter);
+        playlistRecyclerViewAdapter = new PlaylistRecyclerViewAdapter(spotifyManager);
+        recyclerView.setAdapter(playlistRecyclerViewAdapter);
 
         editTextSearch.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -195,10 +196,11 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         String searchQuery = editTextSearch.getText().toString();
         if (!StringUtils.isEmptyOrNull(searchQuery)) {
-            spotifyManager.listSearch(this, searchQuery, trackRecyclerViewAdapter);
+//            spotifyManager.listSearch(this, searchQuery, trackRecyclerViewAdapter);
             recyclerView.smoothScrollToPosition(0);
         } else {
-            spotifyManager.getMyPlaylists(this, trackRecyclerViewAdapter);
+//            spotifyManager.getMyPlaylists(this, trackRecyclerViewAdapter);
+            spotifyManager.getMyPlaylists(this, playlistRecyclerViewAdapter);
         }
     }
 
@@ -249,18 +251,18 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
         Log.d(TAG, "onPlaybackError");
     }
 
-    @Override
-    public void onTrackSelected(Track track) {
-        Glide
-                .with(playerImageView.getContext())
-                .load(track.album.images.get(0).url)
-                .into(playerImageView);
-
-        playerNameView.setText(track.name);
-        playerArtistVIew.setText(track.artists.get(0).name);
-
-        showPlayerControls();
-    }
+//    @Override
+//    public void onTrackSelected(Track track) {
+//        Glide
+//                .with(playerImageView.getContext())
+//                .load(track.album.images.get(0).url)
+//                .into(playerImageView);
+//
+//        playerNameView.setText(track.name);
+//        playerArtistVIew.setText(track.artists.get(0).name);
+//
+//        showPlayerControls();
+//    }
 
     private void showPlayerControls() {
         if (playerControls.getVisibility() == View.GONE) {

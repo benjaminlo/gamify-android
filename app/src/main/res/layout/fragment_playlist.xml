@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/search_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/search_bar_padding">
+
+        <EditText
+            android:id="@+id/edit_text_search"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/search_bar_hint"
+            android:inputType="text" />
+
+        <ImageButton
+            android:id="@+id/button_search"
+            style="?android:buttonBarButtonStyle"
+            android:layout_width="@dimen/search_button_width"
+            android:layout_height="@dimen/search_button_height"
+            android:src="@drawable/ic_search_black_36dp" />
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/playlist_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingLeft="@dimen/recycler_view_left_right_padding"
+        android:paddingRight="@dimen/recycler_view_left_right_padding" />
+
+</LinearLayout>

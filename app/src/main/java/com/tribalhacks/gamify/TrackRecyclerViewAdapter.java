@@ -23,11 +23,11 @@ public class TrackRecyclerViewAdapter extends RecyclerView.Adapter {
     private List<Track> tracks = new ArrayList<>();
 
     private SpotifyManager spotifyManager;
-    private TrackSelectedCallback trackSelectedCallback;
+    private OnTrackSelectedListener onTrackSelectedListener;
 
-    TrackRecyclerViewAdapter(TrackSelectedCallback trackSelectedCallback, SpotifyManager spotifyManager) {
+    TrackRecyclerViewAdapter(OnTrackSelectedListener onTrackSelectedListener, SpotifyManager spotifyManager) {
         super();
-        this.trackSelectedCallback = trackSelectedCallback;
+        this.onTrackSelectedListener = onTrackSelectedListener;
         this.spotifyManager = spotifyManager;
     }
 
@@ -76,10 +76,12 @@ public class TrackRecyclerViewAdapter extends RecyclerView.Adapter {
         }
 
         void onBind(final TrackRecyclerViewAdapter trackRecyclerViewAdapter, final SpotifyManager spotifyManager, final Track track) {
-            Glide
-                    .with(imageView.getContext())
-                    .load(track.album.images.get(0).url)
-                    .into(imageView);
+            if (!track.album.images.isEmpty()) {
+                Glide
+                        .with(imageView.getContext())
+                        .load(track.album.images.get(0).url)
+                        .into(imageView);
+            }
 
             nameView.setText(track.name);
             artistView.setText(track.artists.get(0).name);
@@ -87,7 +89,7 @@ public class TrackRecyclerViewAdapter extends RecyclerView.Adapter {
                 @Override
                 public void onClick(View view) {
                     spotifyManager.onTrackSelected(track);
-//                    trackRecyclerViewAdapter.trackSelectedCallback.onTrackSelected(track);
+                    trackRecyclerViewAdapter.onTrackSelectedListener.onTrackSelected(track);
                 }
             });
         }

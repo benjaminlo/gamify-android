@@ -21,7 +21,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class PlaylistFragment extends Fragment {//implements TrackSelectedCallback {
+public class PlaylistFragment extends Fragment {
 
     @BindView(R.id.edit_text_search)
     EditText editTextSearch;
@@ -30,7 +30,6 @@ public class PlaylistFragment extends Fragment {//implements TrackSelectedCallba
     RecyclerView playlistRecyclerView;
 
     private SpotifyManager spotifyManager;
-    //    private TrackRecyclerViewAdapter trackRecyclerViewAdapter;
     private PlaylistRecyclerViewAdapter playlistRecyclerViewAdapter;
 
     @Nullable
@@ -42,11 +41,12 @@ public class PlaylistFragment extends Fragment {//implements TrackSelectedCallba
 
         spotifyManager = SpotifyManager.getInstance();
 
-        playlistRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-//        trackRecyclerViewAdapter = new TrackRecyclerViewAdapter(this, spotifyManager);
-//        playlistRecyclerView.setAdapter(trackRecyclerViewAdapter);
-        playlistRecyclerViewAdapter = new PlaylistRecyclerViewAdapter(spotifyManager);
-        playlistRecyclerView.setAdapter(playlistRecyclerViewAdapter);
+        MainActivity activity = (MainActivity) getActivity();
+        if (activity != null) {
+            playlistRecyclerView.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false));
+            playlistRecyclerViewAdapter = new PlaylistRecyclerViewAdapter(activity, spotifyManager);
+            playlistRecyclerView.setAdapter(playlistRecyclerViewAdapter);
+        }
 
         editTextSearch.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -70,30 +70,10 @@ public class PlaylistFragment extends Fragment {//implements TrackSelectedCallba
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             String searchQuery = editTextSearch.getText().toString();
             if (!StringUtils.isEmptyOrNull(searchQuery)) {
-//            spotifyManager.listSearch(this, searchQuery, trackRecyclerViewAdapter);
                 playlistRecyclerView.smoothScrollToPosition(0);
-
-                activity.getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, new TrackFragment())
-                        .addToBackStack(null)
-                        .commit();
             } else {
-//            spotifyManager.getMyPlaylists(this, trackRecyclerViewAdapter);
                 spotifyManager.getMyPlaylists(activity, playlistRecyclerViewAdapter);
             }
         }
     }
-
-//    @Override
-//    public void onTrackSelected(Track track) {
-//        Glide
-//                .with(playerImageView.getContext())
-//                .load(track.album.images.get(0).url)
-//                .into(playerImageView);
-//
-//        playerNameView.setText(track.name);
-//        playerArtistVIew.setText(track.artists.get(0).name);
-//
-//        showPlayerControls();
-//    }
 }

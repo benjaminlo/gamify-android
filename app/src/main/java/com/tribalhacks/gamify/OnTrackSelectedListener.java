@@ -2,6 +2,6 @@ package com.tribalhacks.gamify;
 
 import kaaes.spotify.webapi.android.models.Track;
 
-public interface TrackSelectedCallback {
+public interface OnTrackSelectedListener {
     void onTrackSelected(Track track);
 }

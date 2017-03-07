@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.github.nkzawa.emitter.Emitter.Listener;
 import com.spotify.sdk.android.player.PlayerNotificationCallback;
 import com.spotify.sdk.android.player.PlayerState;
@@ -23,6 +24,8 @@ import org.json.JSONObject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import kaaes.spotify.webapi.android.models.PlaylistSimple;
+import kaaes.spotify.webapi.android.models.Track;
 
 import static com.tribalhacks.gamify.SocketManager.EVENT_BUTTON_CLICKED;
 import static com.tribalhacks.gamify.SocketManager.EVENT_CLEAR;
@@ -30,7 +33,7 @@ import static com.tribalhacks.gamify.SocketManager.EVENT_USERNAME;
 import static com.tribalhacks.gamify.SocketManager.KEY_IS_CORRECT;
 import static com.tribalhacks.gamify.SocketManager.KEY_USERNAME;
 
-public class MainActivity extends AppCompatActivity implements PlayerNotificationCallback {
+public class MainActivity extends AppCompatActivity implements PlayerNotificationCallback, OnPlaylistSelectedListener, OnTrackSelectedListener {
 
     private static final String TAG = "GamifyMain";
 
@@ -231,5 +234,30 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
         if (gameControls.getVisibility() == View.VISIBLE) {
             gameControls.startAnimation(slideDownAnimation);
         }
+    }
+
+    @Override
+    public void onPlaylistSelected(PlaylistSimple playlist) {
+        TrackFragment trackFragment = new TrackFragment();
+        trackFragment.setPlaylist(playlist);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, trackFragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    @Override
+    public void onTrackSelected(Track track) {
+        if (!track.album.images.isEmpty()) {
+            Glide
+                    .with(playerImageView.getContext())
+                    .load(track.album.images.get(0).url)
+                    .into(playerImageView);
+        }
+
+        playerNameView.setText(track.name);
+        playerArtistVIew.setText(track.artists.get(0).name);
+
+        showPlayerControls();
     }
 }

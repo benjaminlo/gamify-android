@@ -22,11 +22,11 @@ public class PlaylistRecyclerViewAdapter extends RecyclerView.Adapter {
     private List<PlaylistSimple> playlists = new ArrayList<>();
 
     private SpotifyManager spotifyManager;
-//    private PlaylistSelectedCallback playlistSelectedCallback;
+    private OnPlaylistSelectedListener playlistSelectedListener;
 
-    PlaylistRecyclerViewAdapter(SpotifyManager spotifyManager) {
+    PlaylistRecyclerViewAdapter(OnPlaylistSelectedListener playlistSelectedListener, SpotifyManager spotifyManager) {
         super();
-//        this.playlistSelectedCallback = playlistSelectedCallback;
+        this.playlistSelectedListener = playlistSelectedListener;
         this.spotifyManager = spotifyManager;
     }
 
@@ -59,7 +59,7 @@ public class PlaylistRecyclerViewAdapter extends RecyclerView.Adapter {
         TextView nameView;
 
         @BindView(R.id.owner_id)
-        TextView ownerView;
+        TextView ownerIdView;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -67,19 +67,19 @@ public class PlaylistRecyclerViewAdapter extends RecyclerView.Adapter {
         }
 
         void onBind(final PlaylistRecyclerViewAdapter playlistRecyclerViewAdapter, final SpotifyManager spotifyManager, final PlaylistSimple playlist) {
-            Glide
-                    .with(imageView.getContext())
-                    .load(playlist.images.get(0).url)
-                    .into(imageView);
+            if (!playlist.images.isEmpty()) {
+                Glide
+                        .with(imageView.getContext())
+                        .load(playlist.images.get(0).url)
+                        .into(imageView);
+            }
 
             nameView.setText(playlist.name);
-            ownerView.setText(playlist.owner.id);
+            ownerIdView.setText(playlist.owner.id);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    spotifyManager.getMyPlaylists();
-//                    spotifyManager.onTrackSelected(playlist);
-//                    playlistRecyclerViewAdapter.PlaylistSelectedCallback.onPlaylistSelected(playlist);
+                    playlistRecyclerViewAdapter.playlistSelectedListener.onPlaylistSelected(playlist);
                 }
             });
         }

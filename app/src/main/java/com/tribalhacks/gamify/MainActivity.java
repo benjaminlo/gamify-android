@@ -1,18 +1,12 @@
 package com.tribalhacks.gamify;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,7 +16,6 @@ import com.github.nkzawa.emitter.Emitter.Listener;
 import com.spotify.sdk.android.player.PlayerNotificationCallback;
 import com.spotify.sdk.android.player.PlayerState;
 import com.tribalhacks.gamify.spotify.SpotifyManager;
-import com.tribalhacks.gamify.utils.StringUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,7 +30,7 @@ import static com.tribalhacks.gamify.SocketManager.EVENT_USERNAME;
 import static com.tribalhacks.gamify.SocketManager.KEY_IS_CORRECT;
 import static com.tribalhacks.gamify.SocketManager.KEY_USERNAME;
 
-public class MainActivity extends AppCompatActivity implements PlayerNotificationCallback {//, TrackSelectedCallback {
+public class MainActivity extends AppCompatActivity implements PlayerNotificationCallback {
 
     private static final String TAG = "GamifyMain";
 
@@ -49,12 +42,6 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
 
     @BindView(R.id.button_play_pause)
     ImageButton buttonPlayPause;
-
-    @BindView(R.id.edit_text_search)
-    EditText editTextSearch;
-
-    @BindView(R.id.recycler_view)
-    RecyclerView recyclerView;
 
     @BindView(R.id.response_buttons)
     LinearLayout responseButtonLayout;
@@ -76,8 +63,6 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
 
     private SocketManager socketManager;
     private SpotifyManager spotifyManager;
-    //    private TrackRecyclerViewAdapter trackRecyclerViewAdapter;
-    private PlaylistRecyclerViewAdapter playlistRecyclerViewAdapter;
     private String username;
     private Animation slideUpAnimation;
     private Animation slideDownAnimation;
@@ -122,23 +107,6 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
         spotifyManager = SpotifyManager.getInstance();
         spotifyManager.authenticate(this);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-//        trackRecyclerViewAdapter = new TrackRecyclerViewAdapter(this, spotifyManager);
-//        recyclerView.setAdapter(trackRecyclerViewAdapter);
-        playlistRecyclerViewAdapter = new PlaylistRecyclerViewAdapter(spotifyManager);
-        recyclerView.setAdapter(playlistRecyclerViewAdapter);
-
-        editTextSearch.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View view, int keyCode, KeyEvent event) {
-                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    onSearchButtonClicked(view);
-                    return true;
-                }
-                return false;
-            }
-        });
-
         slideUpAnimation = AnimationUtils.loadAnimation(this, R.anim.slide_up);
         slideDownAnimation = AnimationUtils.loadAnimation(this, R.anim.slide_down);
         slideDownAnimation.setAnimationListener(new Animation.AnimationListener() {
@@ -157,6 +125,9 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
 
             }
         });
+
+        PlaylistFragment playlistFragment = new PlaylistFragment();
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, playlistFragment).commit();
     }
 
     @OnClick(R.id.button_correct)
@@ -190,19 +161,6 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
         spotifyManager.playPause();
     }
 
-    @OnClick(R.id.button_search)
-    void onSearchButtonClicked(View view) {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        String searchQuery = editTextSearch.getText().toString();
-        if (!StringUtils.isEmptyOrNull(searchQuery)) {
-//            spotifyManager.listSearch(this, searchQuery, trackRecyclerViewAdapter);
-            recyclerView.smoothScrollToPosition(0);
-        } else {
-//            spotifyManager.getMyPlaylists(this, trackRecyclerViewAdapter);
-            spotifyManager.getMyPlaylists(this, playlistRecyclerViewAdapter);
-        }
-    }
 
     @OnClick(R.id.button_play_one_second)
     void playOneSecond() {
@@ -250,19 +208,6 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
     public void onPlaybackError(ErrorType errorType, String s) {
         Log.d(TAG, "onPlaybackError");
     }
-
-//    @Override
-//    public void onTrackSelected(Track track) {
-//        Glide
-//                .with(playerImageView.getContext())
-//                .load(track.album.images.get(0).url)
-//                .into(playerImageView);
-//
-//        playerNameView.setText(track.name);
-//        playerArtistVIew.setText(track.artists.get(0).name);
-//
-//        showPlayerControls();
-//    }
 
     private void showPlayerControls() {
         if (playerControls.getVisibility() == View.GONE) {

@@ -27,6 +27,7 @@ import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyCallback;
 import kaaes.spotify.webapi.android.SpotifyError;
 import kaaes.spotify.webapi.android.SpotifyService;
+import kaaes.spotify.webapi.android.models.FeaturedPlaylists;
 import kaaes.spotify.webapi.android.models.Pager;
 import kaaes.spotify.webapi.android.models.Playlist;
 import kaaes.spotify.webapi.android.models.PlaylistSimple;
@@ -186,6 +187,29 @@ public class SpotifyManager implements ConnectionStateCallback, OnTrackSelectedL
     public void onTrackSelected(Track track) {
         selectedTrack = track;
         isNewSong = true;
+    }
+
+    public void getFeaturedPlaylists(final Activity activity, final PlaylistRecyclerViewAdapter adapter) {
+        if (spotify != null) {
+            spotify.getFeaturedPlaylists(new SpotifyCallback<FeaturedPlaylists>() {
+                @Override
+                public void failure(SpotifyError spotifyError) {
+
+                }
+
+                @Override
+                public void success(final FeaturedPlaylists featuredPlaylists, Response response) {
+                    if (featuredPlaylists != null && featuredPlaylists.playlists != null && featuredPlaylists.playlists.items != null) {
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                adapter.setPlaylists(featuredPlaylists.playlists.items);
+                            }
+                        });
+                    }
+                }
+            });
+        }
     }
 
     public void getMyPlaylists(final Activity activity, final PlaylistRecyclerViewAdapter adapter) {

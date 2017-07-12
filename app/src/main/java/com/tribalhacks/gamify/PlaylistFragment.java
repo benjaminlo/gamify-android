@@ -3,6 +3,7 @@ package com.tribalhacks.gamify;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -39,5 +40,15 @@ public class PlaylistFragment extends Fragment {
         }
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        FragmentActivity activity = getActivity();
+        if (activity != null) {
+            spotifyManager.getMyPlaylists(activity, playlistRecyclerViewAdapter);
+        }
     }
 }

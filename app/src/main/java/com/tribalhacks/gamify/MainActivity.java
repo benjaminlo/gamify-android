@@ -129,12 +129,9 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
             }
         });
 
-//        getSupportFragmentManager().beginTransaction()
-//                .add(R.id.fragment_container, new PlaylistFragment())
-//                .commit();
-//        getSupportFragmentManager().beginTransaction()
-//                .add(R.id.fragment_container, new TrackFragment())
-//                .commit();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment_container, new PlaylistFragment())
+                .commit();
     }
 
     @OnClick(R.id.button_correct)
@@ -168,7 +165,6 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
         spotifyManager.playPause();
     }
 
-
     @OnClick(R.id.button_play_one_second)
     void playOneSecond() {
         spotifyManager.play(1000);
@@ -192,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
     @OnClick(R.id.fab_search)
     void openSearch() {
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, new PlaylistFragment())
+                .add(R.id.fragment_container, new SearchFragment())
                 .addToBackStack(null)
                 .commit();
     }

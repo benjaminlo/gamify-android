@@ -62,6 +62,17 @@ public class PlaylistFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        FragmentActivity activity = getActivity();
+        if (activity != null) {
+            editTextSearch.requestFocus();
+            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(editTextSearch, 0);
+        }
+    }
+
     @OnClick(R.id.button_search)
     void onSearchButtonClicked(View view) {
         FragmentActivity activity = getActivity();

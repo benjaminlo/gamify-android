@@ -129,9 +129,9 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
             }
         });
 
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, new PlaylistFragment())
-                .commit();
+//        getSupportFragmentManager().beginTransaction()
+//                .add(R.id.fragment_container, new PlaylistFragment())
+//                .commit();
 //        getSupportFragmentManager().beginTransaction()
 //                .add(R.id.fragment_container, new TrackFragment())
 //                .commit();
@@ -187,6 +187,14 @@ public class MainActivity extends AppCompatActivity implements PlayerNotificatio
     @OnClick(R.id.button_play_ten_seconds)
     void playTenSeconds() {
         spotifyManager.play(10000);
+    }
+
+    @OnClick(R.id.fab_search)
+    void openSearch() {
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment_container, new PlaylistFragment())
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override

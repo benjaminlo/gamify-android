@@ -1,147 +1,164 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.tribalhacks.gamify.MainActivity">
 
-    <FrameLayout
-        android:id="@+id/fragment_container"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/game_controls"
-        style="@style/GameControls">
-
-        <TextView
-            android:id="@+id/room_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/room_id" />
-
-        <TextView
-            android:id="@+id/player_response"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/player_response" />
+        <FrameLayout
+            android:id="@+id/fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
         <LinearLayout
-            android:id="@+id/response_buttons"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:id="@+id/game_controls"
+            style="@style/GameControls">
 
-            <Button
-                android:id="@+id/button_correct"
-                style="?android:buttonBarButtonStyle"
-                android:layout_width="0dp"
+            <TextView
+                android:id="@+id/room_id"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/button_correct" />
+                android:text="@string/room_id" />
 
-            <Button
-                android:id="@+id/button_incorrect"
-                style="?android:buttonBarButtonStyle"
-                android:layout_width="0dp"
+            <TextView
+                android:id="@+id/player_response"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/button_incorrect" />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/player_controls"
-        style="@style/PlayerControls">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <Button
-                android:id="@+id/button_play_one_second"
-                style="?android:buttonBarButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/button_one_sec" />
-
-            <Button
-                android:id="@+id/button_play_three_seconds"
-                style="?android:buttonBarButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/button_three_sec" />
-
-            <Button
-                android:id="@+id/button_play_five_seconds"
-                style="?android:buttonBarButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/button_five_sec" />
-
-            <Button
-                android:id="@+id/button_play_ten_seconds"
-                style="?android:buttonBarButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/button_ten_sec" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/player"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/player_album_image"
-                android:layout_width="@dimen/player_album_image_width"
-                android:layout_height="@dimen/player_album_image_height" />
+                android:text="@string/player_response" />
 
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="@dimen/player_info_margin"
-                android:layout_marginStart="@dimen/player_info_margin"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:id="@+id/response_buttons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/player_song_name"
-                    android:layout_width="wrap_content"
+                <Button
+                    android:id="@+id/button_correct"
+                    style="?android:buttonBarButtonStyle"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textSize="@dimen/player_song_name_text_size" />
+                    android:layout_weight="1"
+                    android:text="@string/button_correct" />
 
-                <TextView
-                    android:id="@+id/player_artist"
-                    android:layout_width="wrap_content"
+                <Button
+                    android:id="@+id/button_incorrect"
+                    style="?android:buttonBarButtonStyle"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textSize="@dimen/player_artist_text_size" />
+                    android:layout_weight="1"
+                    android:text="@string/button_incorrect" />
 
             </LinearLayout>
 
-            <ImageButton
-                android:id="@+id/button_play_pause"
-                style="?android:buttonBarButtonStyle"
-                android:layout_width="@dimen/play_pause_button_width"
-                android:layout_height="@dimen/play_pause_button_height"
-                android:src="@drawable/ic_play_arrow_black_48dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/player_controls"
+            style="@style/PlayerControls">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/button_play_one_second"
+                    style="?android:buttonBarButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/button_one_sec" />
+
+                <Button
+                    android:id="@+id/button_play_three_seconds"
+                    style="?android:buttonBarButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/button_three_sec" />
+
+                <Button
+                    android:id="@+id/button_play_five_seconds"
+                    style="?android:buttonBarButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/button_five_sec" />
+
+                <Button
+                    android:id="@+id/button_play_ten_seconds"
+                    style="?android:buttonBarButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/button_ten_sec" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/player"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/player_album_image"
+                    android:layout_width="@dimen/player_album_image_width"
+                    android:layout_height="@dimen/player_album_image_height" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="@dimen/player_info_margin"
+                    android:layout_marginStart="@dimen/player_info_margin"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/player_song_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textSize="@dimen/player_song_name_text_size" />
+
+                    <TextView
+                        android:id="@+id/player_artist"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textSize="@dimen/player_artist_text_size" />
+
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/button_play_pause"
+                    style="?android:buttonBarButtonStyle"
+                    android:layout_width="@dimen/play_pause_button_width"
+                    android:layout_height="@dimen/play_pause_button_height"
+                    android:src="@drawable/ic_play_arrow_black_48dp" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
     </LinearLayout>
 
-</LinearLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:tint="@android:color/white"
+        app:srcCompat="@drawable/ic_search_black_36dp" />
+
+</android.support.design.widget.CoordinatorLayout>
